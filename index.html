@@ -1,0 +1,2092 @@
+<html>
+<head>
+<title>MSI and TLI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<link href="Metro-UI-CSS-master/css/modern.css" rel="stylesheet">
+<link href="Metro-UI-CSS-master/css/modern-responsive.css" rel="stylesheet">
+
+
+<!-- <link href="Metro-UI-CSS-master/less/slider.less" rel="stylesheet"> -->
+<link href="prettify.css" rel="stylesheet" type="text/css">
+
+<!-- <script type="text/javascript" src="Metro-UI-CSS-master/javascript/tile-slider.js"></script>
+<script type="text/javascript" src="Metro-UI-CSS-master/javascript/tile-drag.js"></script>
+<script type="text/javascript" src="Metro-UI-CSS-master/javascript/slider.js"></script> -->
+
+<script src="jquery-1.8.3.min.js"></script>
+</head>
+		
+		<!--  //////////////////////////////////////////////////////////////////////////////////////////////////-->
+		
+		<!--[if IE]><script type="text/javascript" src="javascript/excanvas.js"></script><![endif]-->
+		<script type="text/javascript" src='googlechart/SurfacePlot.js'></script>
+		<script type="text/javascript" src='googlechart/ColourGradient.js'></script>
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+		<script type='text/javascript'></script>
+		
+		
+<!--  //////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+<script>
+
+
+//----------------------------------------------------------Q2.8
+
+   function isNumberKey2(evt)												// this is to make the sum of the element to be 100 and the remainder
+{
+   var charCode = (evt.which) ? evt.which : event.keyCode
+   if (charCode > 31 && (charCode < 48 || charCode > 57) )
+     	return false;
+		var st_number = new Number(document.category.SH.value);
+		var ct_number = new Number(document.category.CR.value);
+		var bt_number = new Number(document.category.BS.value);
+	
+	var total_number = st_number+ct_number+bt_number;
+	total_number = total_number - evt.srcElement.value;
+	
+	if( (evt.srcElement.value*10+(charCode-48)+total_number) >100)
+	{
+		alert("Can not input more than 100");
+		return false;
+	}
+	document.category.remainder2.value== "";
+	document.category.remainder2.value = 100-(total_number + evt.srcElement.value*10+(charCode-48));
+   return true;
+} 
+
+function onDelete2(evt)															
+{
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if(charCode == 8)
+	{
+			var st_number = new Number(document.category.SH.value);
+			var ct_number = new Number(document.category.CR.value);
+			var bt_number = new Number(document.category.BS.value);
+
+			var total_number = st_number+ct_number+bt_number;
+			total_number = total_number - evt.srcElement.value;
+			document.category.remainder2.value== "";
+			document.category.remainder2.value = 100-(total_number + (evt.srcElement.value-evt.srcElement.value%10)/10);
+	}
+} 
+
+//-----------------------------------------------------------for AHP
+
+function Matrix() {													// this function defines matrix
+	
+	this.rows = new Array();
+}
+
+
+function initVectorAsOne(somevector)										// this function initialize the all vector element to 0
+{
+	for (var i = lengthOfMatrix - 1; i >= 0; i--) {
+			somevector[i] = 1;
+}
+}
+function initVector(somevector)										// this function initialize the all vector element to 0
+{
+	for (var i = lengthOfMatrix - 1; i >= 0; i--) {
+			somevector[i] = 0;
+}
+}
+
+function sum(someArray)												// calculate the sum of array
+{
+	var total = 0;
+	for (var i = 0; i < someArray.length; i++) {
+			total += parseFloat(someArray[i]);
+		}
+		return total;
+}
+
+function firstStep()												//define the elements of matrix
+{
+	for (var i = lengthOfMatrix - 1; i >= 0; i--) 
+	{
+		
+		for (var j = lengthOfMatrix - 1; j >= 0; j--) 
+		{
+				
+			vector[i] = vector[i] * m.rows[i][j];
+		}
+	
+	}
+	
+	for(var i = lengthOfMatrix - 1; i >= 0; i--)					// calculate the each of the aforementioned third-root-of-product values
+	{
+		vector[i] = Math.pow(vector[i],1.0/lengthOfMatrix) ;
+		if(!isNaN(vector[i]))
+		{
+			vector[i] = vector[i].toFixed(3);
+		}
+	}
+	//alert(vector);
+}
+
+function secondStep()							//normalizing the aforementioned nth root of products to get the appropriate weights; 
+{
+	var sumVector = sum(vector);
+	if(!isNaN(sumVector))
+	{
+		sumVector = sumVector.toFixed(3);
+		//sumVector = sumVector;
+	}
+	for(var i = 0 ; i <= lengthOfMatrix-1 ; i++){
+		vector[i] = (vector[i]/sumVector);	
+
+	}
+
+	
+}
+
+function thirdStep()										// the value of appropriate weights
+{
+	finalParameter=[];
+	for (var i = 0; i < vector.length; i++) {
+
+				finalParameter[i] = vector[i];
+			
+	}
+}
+
+function sumColumn()												// this function calculate the sum of each column matrix
+{	
+	vector = [];
+
+	for (var i = lengthOfMatrix - 1; i >= 0; i--) {
+		
+		for (var j = lengthOfMatrix - 1; j >= 0; j--) {
+				
+			vector[j] = vector[j] + m.rows[i][j];
+}
+}
+}
+
+
+
+function sumProducts(array1, array2) {								// calculate the dot product of sum of colunms and weights
+	if(array1.length)	
+		return (array1.pop() * array2.pop()) + sumProducts(array1, array2);
+
+	return 0;
+}
+
+
+
+
+function calculateLambdaMax()										// calculate the lambda Max, which is used for calcualting Inconsistency.
+{
+	var finalVectorCopy = new Array();
+	var vectorSum = new Array();
+	initVector(vectorSum);
+	for (var i = lengthOfMatrix - 1; i >= 0; i--) 
+	{
+		for (var j = lengthOfMatrix - 1; j >= 0; j--) 
+		{	
+			vectorSum[j] = vectorSum[j] + m.rows[i][j];
+		}
+	}
+
+	for(var i  = 0; i < finalParameter.length ; i++)
+	{
+		finalVectorCopy[i] = finalParameter[i];
+	}
+	return sumProducts(finalVectorCopy,vectorSum);
+}
+
+
+
+function initMatrix(group_id)										// initialize the Matrix
+{
+	var valueVector = new Array()
+	var length =groups.rows[group_id].length;
+	var calculate = new Array();
+	
+	calculate['9'] = 1/9;
+	calculate['8'] = 1/8;
+	calculate['7'] = 1/7;
+	calculate['6'] = 1/6;
+	calculate['5'] = 1/5;
+	calculate['4'] = 1/4;
+	calculate['3'] = 1/3;
+	calculate['2'] = 1/2;
+	////////////////////////
+	//calculate[0] = 1;
+	//////////////////////////////
+	calculate['1'] = 1;
+	calculate['-2'] = 2;
+	calculate['-3'] = 3;
+	calculate['-4'] = 4;
+	calculate['-5'] = 5;
+	calculate['-6'] = 6;
+	calculate['-7'] = 7;
+	calculate['-8'] = 8;
+	calculate['-9'] = 9;
+	for(var i = 0;i < length; i++)																	// write the value into the matrix
+	{
+
+			valueVector[i] = calculate[document.getElementById(groups.rows[group_id][i]).innerHTML];
+	
+		
+	}
+	
+
+
+
+	if(lengthOfMatrix===4)
+	{			// Setting the the format of the matrix
+	
+			m.rows[0] = new Array( 1               ,   valueVector[0],   valueVector[1], valueVector[2]);
+			m.rows[1] = new Array( 1/valueVector[0],                1,   valueVector[3], valueVector[4]);
+			m.rows[2] = new Array( 1/valueVector[1], 1/valueVector[3],                1, valueVector[5]);
+			m.rows[3] = new Array( 1/valueVector[2], 1/valueVector[4], 1/valueVector[5],              1);
+		
+	}else if(lengthOfMatrix===3)
+	{
+			
+			m.rows[0] = new Array( 1               ,   valueVector[0],   valueVector[1]);
+			m.rows[1] = new Array( 1/valueVector[0],                1,   valueVector[2]);
+			m.rows[2] = new Array( 1/valueVector[1], 1/valueVector[2],                1);
+	}
+
+}
+
+function calculateAHP(group_id)																	// calculate the AHP
+{
+	vector = [];
+	initMatrix(group_id);
+	initVectorAsOne(vector);
+	initVector(finalParameter);
+	firstStep();
+	secondStep();
+	thirdStep();
+
+	
+	
+	var ci = (calculateLambdaMax()- lengthOfMatrix)/(lengthOfMatrix-1);						// Here is the formula for the consistency index
+	
+	if(groups.rows[group_id].length===3){													// Putting the right value to the right position 
+
+		var cr = ci / 0.58;																	// consistency ratio = CI / RI; (random Index)
+		
+	 	document.getElementById("m"+group_id+"1").value= finalParameter[0].toFixed(3);
+		document.getElementById("m"+group_id+"2").value= finalParameter[1].toFixed(3);	
+		document.getElementById("m"+group_id+"3").value= finalParameter[2].toFixed(3);
+		document.getElementById("m"+group_id+"4").value= cr.toFixed(5);
+	
+ 		}else if(groups.rows[group_id].length===6){ 
+		
+ 		var cr = ci / 0.9;	
+ 			
+	 	document.getElementById("m"+group_id+"1").value= finalParameter[0].toFixed(3);
+		document.getElementById("m"+group_id+"2").value= finalParameter[1].toFixed(3);	
+		document.getElementById("m"+group_id+"3").value= finalParameter[2].toFixed(3);
+		document.getElementById("m"+group_id+"4").value= finalParameter[3].toFixed(3);  
+		document.getElementById("m"+group_id+"5").value= cr.toFixed(5);
+	}
+}
+
+
+//----------------------------------------------------------All
+
+
+var groups = new Matrix();																		// picking up the right value for the matrix from HTML
+groups.rows[0] = new Array("range111","range112","range113","range114","range115","range116");
+
+groups.rows[1] = new Array("range121","range122","range123","range124","range125","range126");
+
+
+groups.rows[2] = new Array("range211","range212","range213","range214","range215","range216");
+groups.rows[3] = new Array("range221","range222","range223","range224","range225","range226");
+groups.rows[4] = new Array("range231","range232","range233","range234","range235","range236");
+groups.rows[5] = new Array("range241","range242","range243");
+groups.rows[6] = new Array("range251","range252","range253");
+groups.rows[7] = new Array("range261","range262","range263");
+groups.rows[8] = new Array("range271","range272","range273");
+
+
+var vector = new Array();																		// Global variables
+var finalParameter = new Array();
+var lengthOfMatrix = 4;
+var lambdaMax = 0;
+var m = new Matrix();
+
+function checkValidAll()
+{
+	groups_length = 9;//groups.length;
+	for (var i=0 ; i <groups_length ; i++ )
+	{
+		if (checkValid(i))
+			{}
+		else
+			{return false;};
+	}
+	return true;
+}
+
+
+function checkValid(group_id)
+{
+	var valueVector = new Array()
+	var length =groups.rows[group_id].length;
+	var calculate = new Array();
+	
+	calculate['9'] = 1/9;
+	calculate['8'] = 1/8;
+	calculate['7'] = 1/7;
+	calculate['6'] = 1/6;
+	calculate['5'] = 1/5;
+	calculate['4'] = 1/4;
+	calculate['3'] = 1/3;
+	calculate['2'] = 1/2;
+	////////////////////////
+	//calculate[0] = 1;
+	//////////////////////////////
+	calculate['1'] = 1;
+	calculate['-2'] = 2;
+	calculate['-3'] = 3;
+	calculate['-4'] = 4;
+	calculate['-5'] = 5;
+	calculate['-6'] = 6;
+	calculate['-7'] = 7;
+	calculate['-8'] = 8;
+	calculate['-9'] = 9;
+	
+	
+	for(var i = 0;i < length; i++)																	// write the value into the matrix
+	{
+
+			valueVector[i] = calculate[document.getElementById(groups.rows[group_id][i]).innerHTML];
+	}
+ 	var k = 0;
+	for(var i = 0;i < lengthOfMatrix; i++)																	// write the value into the matrix
+	{
+		if (valueVector[i] === 1)
+		{
+			k++;
+		}
+	}
+	
+	var groupID = group_id +1;
+	
+	if (k=== lengthOfMatrix * (lengthOfMatrix-1) /2)
+	{
+		if (confirm("Slider Bar on Group "+ groupID +" Haven't Move, Still Continue?")) {
+		    // Save it!
+		    
+		    return true;
+		} else {
+		    return false;
+		}
+	}
+	else
+	{
+		return true;
+	}
+}
+
+function showValue(newValue,id,group_id)														// conditional statement for choosing matrix format
+{
+	if(groups.rows[group_id].length===3){
+		
+		lengthOfMatrix=3;
+		
+	}else if(groups.rows[group_id].length===6){ 
+		
+		lengthOfMatrix=4;
+	
+	}
+	 
+	var display = new Array();
+
+
+//--------------------------------------------------------------------- corresponding of display value and real value	 
+ 	 display[-8] = '-9';
+	 display[-7] = '-8';
+	 display[-6] = '-7';
+	 display[-5] = '-6';
+	 display[-4] = '-5';
+	 display[-3] = '-4';
+	 display[-2] = '-3';
+	 display[-1] = '-2';
+	 display[0] = '1';
+	 display[1] = '2';
+	 display[2] = '3';
+	 display[3] = '4';
+	 display[4] = '5';
+	 display[5] = '6';
+	 display[6] = '7';
+	 display[7] = '8';
+	 display[8] = '9'; 
+	  
+	  document.getElementById(id).innerHTML=display[newValue];
+	  calculateAHP(group_id);
+	  
+}
+
+
+
+//------------------------------------------------------------------------------------MLI
+
+	var myArray = new Array();
+
+	var past_msi_p = 0;      					//make them to be global variables
+	var past_msi_a = 0;
+	var past_msi_d = 0;
+	
+	var future_msi_p = 0;
+	var future_msi_a = 0;
+	var future_msi_d = 0;
+	
+	var past_msi_p_array = new Array();
+	var past_msi_a_array = new Array();
+	var past_msi_d_array = new Array();
+	
+	var future_msi_p_array = new Array();
+	var future_msi_a_array = new Array();
+	var future_msi_d_array = new Array();
+
+	var dataGroup = new Array();
+	
+function msiValue(){
+		
+	var q = 0;
+	var t = 0;
+	var c = 0;
+	var f = 0;
+	
+	var q1 = 0;
+	var t1 = 0;
+	var c1 = 0;
+	var f1 = 0;
+	
+		q = new Number(document.getElementsByName('Q0')[0].value);			// pick up the values
+		t = new Number(document.getElementsByName('T0')[0].value);
+		c = new Number(document.getElementsByName('C0')[0].value);
+		f = new Number(document.getElementsByName('F0')[0].value);
+		
+		q1 = new Number(document.getElementsByName('Q1')[0].value);			// pick up the values
+		t1 = new Number(document.getElementsByName('T1')[0].value);
+		c1 = new Number(document.getElementsByName('C1')[0].value);
+		f1 = new Number(document.getElementsByName('F1')[0].value);
+	
+		var qn = q/(q + c + t);
+		var cn = c/(q + c + t);
+		var tn = t/(q + c + t);
+		var fn = f/(q + c + t + f);
+			
+		var qn1 = q1/(q1 + c1 + t1);
+		var cn1 = c1/(q1 + c1 + t1);
+		var tn1 = t1/(q1 + c1 + t1);
+		var fn1 = f1/(q1 + c1 + t1 + f1);
+		
+		past_msi_p = 1 - (1-Math.pow(qn,1/3))*(1-0.9*tn)*(1-0.9*cn)*Math.pow(fn,1/3);
+		
+		past_msi_a = 1 - (1-fn)* Math.pow(Math.abs((0.95*qn-0.285)*(0.95*tn-0.285)*(0.95*cn-0.285)),1/3.);
+		
+		past_msi_d = 1 - (1-Math.pow(cn,1/3))*(1-0.9*tn)*(1-0.9*qn)*Math.pow(fn,1/3);
+		
+		future_msi_p = 1 - (1-Math.pow(qn1,1/3))*(1-0.9*tn1)*(1-0.9*cn1)*Math.pow(fn1,1/3);
+		
+		future_msi_a = 1 - (1-fn1)* Math.pow(Math.abs((0.95*qn1-0.285)*(0.95*tn1-0.285)*(0.95*cn1-0.285)),1/3.);
+		
+		future_msi_d = 1 - (1-Math.pow(cn1,1/3))*(1-0.9*tn1)*(1-0.9*qn1)*Math.pow(fn1,1/3);
+	
+		document.getElementsByName('past_msi_p')[0].value= past_msi_p.toFixed(4);
+		document.getElementsByName('past_msi_a')[0].value= past_msi_a.toFixed(4);
+		document.getElementsByName('past_msi_d')[0].value= past_msi_d.toFixed(4);
+		document.getElementsByName('future_msi_p')[0].value= future_msi_p.toFixed(4);
+		document.getElementsByName('future_msi_a')[0].value= future_msi_a.toFixed(4);
+		document.getElementsByName('future_msi_d')[0].value= future_msi_d.toFixed(4);
+		
+		past_msi_p_array.push(past_msi_p);
+		past_msi_a_array.push(past_msi_a);
+		past_msi_d_array.push(past_msi_d);
+		
+		future_msi_p_array.push(future_msi_p);
+		future_msi_a_array.push(future_msi_a);
+		future_msi_d_array.push(future_msi_d);
+
+		dataGroup.push(past_msi_p_array.length);
+}
+
+var TLI = 0;				//make the TLI a global variable
+
+var tli_array = new Array();
+
+
+function tliValue(){
+	
+
+		
+	var OI = 0;
+	var LI = 0;
+	var RI = 0;
+	
+	var Aa = 0;
+	var Ab = 0;
+	var Ac = 0;
+	var Ad = 0;	
+	var Ba = 0;
+	var Bb = 0;
+	var Bc = 0;
+	var Bd = 0;
+	var Ca = 0;
+	var Cb = 0;
+	var Cc = 0;
+	var Cd = 0;
+	var Da = 0;
+	var Db = 0;
+	var Dc = 0;
+	var Ea = 0;
+	var Eb = 0;
+	var Ec = 0;
+	var Fa = 0;
+	var Fb = 0;
+	var Fc = 0;	
+	var Ga = 0;
+	var Gb = 0;
+	var Gc = 0;
+
+	var SH = 0;
+	var CR = 0;
+	var BS = 0;
+	
+	var SHd = 0;
+	var CRd = 0;
+	var BSd = 0;
+	
+	
+	var SH1 = 0;	//only using for calculation
+	var CR1 = 0;
+	var BS1 = 0;
+	
+	
+	Aa = new Number(document.getElementsByName('Aa')[0].value);
+	Ab = new Number(document.getElementsByName('Ab')[0].value);
+	Ac = new Number(document.getElementsByName('Ac')[0].value);
+	Ad = new Number(document.getElementsByName('Ad')[0].value);
+	
+	Ba = new Number(document.getElementsByName('Ba')[0].value);
+	Bb = new Number(document.getElementsByName('Bb')[0].value);
+	Bc = new Number(document.getElementsByName('Bc')[0].value);
+	Bd = new Number(document.getElementsByName('Bd')[0].value);
+	
+	Ca = new Number(document.getElementsByName('Ca')[0].value);
+	Cb = new Number(document.getElementsByName('Cb')[0].value);
+	Cc = new Number(document.getElementsByName('Cc')[0].value);
+	Cd = new Number(document.getElementsByName('Cd')[0].value);
+	
+	Da = new Number(document.getElementsByName('Da')[0].value);
+	Db = new Number(document.getElementsByName('Db')[0].value);
+	Dc = new Number(document.getElementsByName('Dc')[0].value);
+	
+	Ea = new Number(document.getElementsByName('Ea')[0].value);
+	Eb = new Number(document.getElementsByName('Eb')[0].value);
+	Ec = new Number(document.getElementsByName('Ec')[0].value);
+	
+	Fa = new Number(document.getElementsByName('Fa')[0].value);
+	Fb = new Number(document.getElementsByName('Fb')[0].value);
+	Fc = new Number(document.getElementsByName('Fc')[0].value);
+	
+	Ga = new Number(document.getElementsByName('Ga')[0].value);
+	Gb = new Number(document.getElementsByName('Gb')[0].value);
+	Gc = new Number(document.getElementsByName('Gc')[0].value);
+	
+	SH1 = new Number(document.getElementsByName('SH')[0].value);
+	CR1 = new Number(document.getElementsByName('CR')[0].value);
+	BS1 = new Number(document.getElementsByName('BS')[0].value);
+
+	SH = SH1/100;
+	CR = CR1/100;
+	BS = BS1/100;
+	
+	
+	var EF = (Da + Ea)/2;
+	var SA = (Db + Eb)/2;
+	var EE = (Dc + Ec)/2;
+	
+	var PL = (Fa + Ga)/2;
+	var CL = (Fb + Gb)/2;
+	var DL = (Fc + Gc)/2;
+	
+	var IC = (Aa + Ba)/2;
+	var IM = (Ab + Bb)/2;
+	var IS = (Ac + Bc)/2;
+	var BT = (Ad + Bd)/2;
+	
+	var PC = Ca;
+	var PT = Cb;
+	var IT = Cc;
+	var OR = Cd;
+	
+	
+	var data = new Array(EE, SA, EF);						// calculate standard deviation
+	var deviation = new Array();
+	var sum = 0;
+	var devnsum = 0;
+	var std = 0;
+	var len = data.length;
+	
+	for (var i=0; i<len; i++) {
+	sum = sum + (parseFloat(data[i],10)); // ensure number to base 10
+	}
+	var mean = (sum/len).toFixed(6); // 6 decimal places
+	
+	for (i=0; i<len; i++) {
+	deviation[i] = data[i] - mean;
+	deviation[i] = deviation[i] * deviation[i];
+	devnsum = devnsum + deviation[i];
+	}
+	
+	std = Math.sqrt(devnsum/(len-1)).toFixed(6); // 6 decimal places
+
+//	alert(std);
+	
+	OI_P = 1 - (1-Math.pow(EE,1/3))*(1-EF)*(1-SA)*Math.pow(std,1/3);
+	OI_A = 1 - (1-Math.pow(SA,1/3))*(1-Math.pow(std,1/3));	
+	OI_D = 1 - (1-Math.pow(EF,1/3))*(1-EE)*(1-SA)*Math.pow(std,1/3);	
+	OI_R = (OI_P + OI_A + OI_D)/3;
+//	alert(OI_D);
+	
+	if(EE >= 0.43)
+		{
+			OI = OI_P;
+		}
+	else if(SA >= 0.43)
+		{
+			OI = OI_A;
+		}
+	else if(EF >= 0.43)
+		{
+			OI = OI_D;
+		}
+	else{
+			OI = OI_R;
+	}
+	
+//	alert(Math.max(PL,CL));
+//	alert(Math.max(IC,IM,IS,BT));
+	
+
+	LI = DL * (1 - Math.max(PL,CL))*(1-Math.abs(1/4-Math.max(IC,IM,IS,BT)));
+	
+//	alert(LI);
+	
+	if(SH >= 0.45 && SH <= 0.7)
+		{
+			SHd = 0;
+		}else{
+			SHd = Math.min(Math.abs(0.45-SH),Math.abs(0.7-SH));	
+		}
+	
+	if(CR <= 0.35)
+		{
+			CRd = 0;
+		}else{
+			CRd = Math.abs(0.35-CR);
+		}	
+//	alert(CRd);	
+	if(BS <= 0.1)
+		{
+			BSd = 0;
+		}else{
+			BSd = Math.abs(0.1-BS);
+		}
+
+//	alert(BSd);
+
+	TI = 1 - Math.max(SHd, CRd, BSd);
+
+//	alert(TI);
+
+	RI = (1-PT * (1-TI)) * (3 * Math.min(PC,IT,OR)) * TI;
+
+	TLI = OI * LI * RI;
+	
+//	alert(TLI);
+
+	document.getElementsByName('tli')[0].value= TLI.toFixed(4);
+
+	tli_array.push(TLI);
+	
+	//alert(tli_array[0]);
+}
+
+var past_oc_p_array = new Array();
+var past_oc_a_array = new Array();
+var past_oc_d_array = new Array();
+
+var future_oc_p_array = new Array();
+var future_oc_a_array = new Array();
+var future_oc_d_array = new Array();
+
+ function ocValue(){
+	
+	var past_oc_p = 0;
+	var past_oc_a = 0;
+	var past_oc_d = 0;
+	var future_oc_p = 0;
+	var future_oc_a = 0;
+	var future_oc_d = 0;
+	
+	past_oc_p = TLI * past_msi_p;
+	past_oc_a = TLI * past_msi_a;
+	past_oc_d = TLI * past_msi_d;
+	
+	future_oc_p = TLI * future_msi_p;
+	future_oc_a = TLI * future_msi_a;
+	future_oc_d = TLI * future_msi_d;
+		 
+		document.getElementsByName('past_oc_p')[0].value= past_oc_p.toFixed(4);
+		document.getElementsByName('past_oc_a')[0].value= past_oc_a.toFixed(4);
+		document.getElementsByName('past_oc_d')[0].value= past_oc_d.toFixed(4);
+		
+		document.getElementsByName('future_oc_p')[0].value= future_oc_p.toFixed(4);
+		document.getElementsByName('future_oc_a')[0].value= future_oc_a.toFixed(4);
+		document.getElementsByName('future_oc_d')[0].value= future_oc_d.toFixed(4);
+	
+		past_oc_p_array.push(past_oc_p);
+		past_oc_a_array.push(past_oc_a);
+		past_oc_d_array.push(past_oc_d);
+		
+		future_oc_p_array.push(future_oc_p);
+		future_oc_a_array.push(future_oc_a);
+		future_oc_d_array.push(future_oc_d);
+		
+} 
+
+
+
+
+
+//------------------------------------------------------------------------------------
+
+
+function nextPerson()
+{
+	//alert(past_msi_p_array.length);
+	document.getElementById('count').innerHTML = past_msi_p_array.length + 1;
+	
+	
+	
+	
+	 var myTableDiv = document.getElementById("myDynamicTable");				//create dynamic table to store submitted data
+     
+	 var table = document.createElement('TABLE');
+	 table.border='1';
+	 table.id='dyna'+ past_msi_p_array.length;
+	 	 
+
+	 
+	 var tableCaption = document.createElement('CAPTION');
+	 tableCaption.appendChild(document.createTextNode("NO." + past_msi_p_array.length));
+	 table.appendChild(tableCaption);
+	 
+	 var tableHead = document.createElement('THEAD');
+	 table.appendChild(tableHead);
+	 var tr = document.createElement('TR');
+	 tableHead.appendChild(tr);
+	 
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     bold.appendChild(document.createTextNode("Attributes"));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     bold.appendChild(document.createTextNode("Prospector"));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     bold.appendChild(document.createTextNode("Analyzer"));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     bold.appendChild(document.createTextNode("Defender"));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     
+	 var tableBody = document.createElement('TBODY');
+	 table.appendChild(tableBody);
+	 
+	 
+	 var tr = document.createElement('TR');
+	 tableBody.appendChild(tr);
+	 var td = document.createElement('TD');	   
+	 var bold = document.createElement('B');
+	 bold.appendChild(document.createTextNode("Past MSI"));
+	 td.appendChild(bold);
+	 tr.appendChild(td);	       
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(past_msi_p_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(past_msi_a_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(past_msi_d_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 
+	 var tr = document.createElement('TR');
+	 tableBody.appendChild(tr);
+	 var td = document.createElement('TD');	   
+	 var bold = document.createElement('B');
+	 bold.appendChild(document.createTextNode("Future MSI"));
+	 td.appendChild(bold);
+	 tr.appendChild(td);	       
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(future_msi_p_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(future_msi_a_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(future_msi_d_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 
+	 var tr = document.createElement('TR');
+	 tableBody.appendChild(tr);
+	 var td = document.createElement('TD');	   
+	 var bold = document.createElement('B');
+	 bold.appendChild(document.createTextNode("TLI"));
+	 td.appendChild(bold);
+	 tr.appendChild(td);	       
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(tli_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(""));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(""));
+	 tr.appendChild(td);
+	       
+	 var tr = document.createElement('TR');
+	 tableBody.appendChild(tr);
+	 var td = document.createElement('TD');	   
+	 var bold = document.createElement('B');
+	 bold.appendChild(document.createTextNode("Past OCI"));
+	 td.appendChild(bold);
+	 tr.appendChild(td);	       
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(past_oc_p_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(past_oc_a_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(past_oc_d_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 
+	 var tr = document.createElement('TR');
+	 tableBody.appendChild(tr);
+	 var td = document.createElement('TD');	   
+	 var bold = document.createElement('B');
+	 bold.appendChild(document.createTextNode("Future OCI"));
+	 td.appendChild(bold);
+	 tr.appendChild(td);	       
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(future_oc_p_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(future_oc_a_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 var td = document.createElement('TD');
+	 td.appendChild(document.createTextNode(future_oc_d_array[(past_msi_p_array.length)-1].toFixed(4)));
+	 tr.appendChild(td);
+	 
+	 tr.appendChild(td);
+	 tr.appendChild(td);
+	  	   
+	 
+	 
+	
+	    
+	 myTableDiv.appendChild(table);
+	
+//	alert(past_msi_p_array.length);
+}
+
+//-------------------------------------------------------------------------------------------
+
+function dele()																//delete previous submitted data(array)
+{
+	
+	if (confirm('Are you sure you want to delete the previous data?')) {
+		
+		var tables = document.getElementById('dyna'+ past_msi_p_array.length);		// delete previous dynamic table
+		
+	    tables.parentNode.removeChild(tables);
+		
+		
+	    past_msi_p_array.pop();
+	    past_msi_a_array.pop();
+	    past_msi_d_array.pop();
+	    
+	    future_msi_p_array.pop();
+	    future_msi_a_array.pop();
+	    future_msi_d_array.pop();
+	    
+	    tli_array.pop();
+	    
+	    past_oc_p_array.pop();
+	    past_oc_a_array.pop();
+	    past_oc_d_array.pop();
+		
+	    future_oc_p_array.pop();
+	    future_oc_a_array.pop();
+	    future_oc_d_array.pop();
+	    
+		document.getElementById('count').innerHTML = past_msi_p_array.length + 1;
+	
+	} else {
+	   
+	}
+//	alert(past_msi_p_array.length);
+}
+
+//--------------------------------------------------------------------------------
+
+var selectPastMsi = new Array();
+var selectFutureMsi = new Array();
+var selectTli = new Array();
+var selectPastOci = new Array();
+var selectFutureOci = new Array();
+
+var firstPastMsi = 0;
+var lastPastMsi = 0;
+
+var firstTli = 0;
+var lastTli = 0;
+
+var firstFutureMsi = 0;
+var lastFutureMsi = 0;
+
+function selectType()
+{
+	var confirmType = null;
+	var radios = document.getElementsByName("companyType");
+ 	for (var j = 0, length = radios.length; j < length; j++)
+	{
+		if (radios[j].checked) 
+		{
+	      confirmType = new Number(radios[j].value);   
+		}  
+    } 
+	
+ //   confirmType = 1;		
+    
+//	alert(confirmType);
+//	alert(typeof confirmType);
+	
+	
+	
+	switch(parseInt(confirmType))
+	{
+		
+	case 0:										//prospector
+		
+		alert("case Prospector");
+		selectPastMsi = past_msi_p_array;
+		selectFutureMsi = future_msi_p_array;
+		selectTli = tli_array;
+		selectPastOci = past_oc_p_array;
+		selectFutureOci = future_oc_p_array;
+	  break;
+	  
+	case 1:
+		alert("case Analyzer");
+		selectPastMsi = past_msi_a_array;
+		selectFutureMsi = future_msi_a_array;
+		selectTli = tli_array;
+		selectPastOci = past_oc_a_array;
+		selectFutureOci = future_oc_a_array;
+	  break;
+	  
+	case 2:
+		alert("case Defender");
+		selectPastMsi = past_msi_d_array;
+		selectFutureMsi = future_msi_d_array;
+		selectTli = tli_array;
+		selectPastOci = past_oc_d_array;
+		selectFutureOci = future_oc_d_array;
+	  break;
+	  
+	default:
+		  alert("Please select a company type");
+	}
+		
+//	alert(selectPastMsi[0]);
+//	alert(selectFutureMsi[0]);
+//	alert(selectTli[0]);
+//	alert(selectPastOci[0]);
+//	alert(selectFutureOci[0]);
+	
+
+	
+//-------------------------------------------------------------------------   linear regression function for past MSI
+//	alert(selectPastMsi);
+//	alert(dataGroup);
+
+
+	var known_y = selectPastMsi;
+	var known_x = dataGroup;
+	var pastMsi = linearRegression(known_y, known_x);
+	
+/* 	alert(pastMsi.slope);
+	alert(pastMsi.intercept);
+	alert(pastMsi.r2); */
+
+	firstPastMsi = pastMsi.slope * 1 + pastMsi.intercept;
+	lastPastMsi = pastMsi.slope * dataGroup.length + pastMsi.intercept;
+	
+//	alert(firstPastMsi);
+//	alert(lastPastMsi);
+//-------------------------------------------------------------------------	 linear regression function for TLI
+	
+//	alert(selectTli);
+//	alert(dataGroup);
+	
+	var known_y2 = selectTli;
+	var known_x2 = dataGroup;
+	var tliReg = linearRegression(known_y2, known_x2);
+	
+	firstTli = tliReg.slope * 1 + tliReg.intercept;
+	lastTli = tliReg.slope * dataGroup.length + tliReg.intercept;
+	
+//	alert(firstTli);
+//	alert(lastTli);
+//--------------------------------------------------------------------------	linear regression function for future MSI
+//	alert(selectFutureMsi);
+//	alert(dataGroup);
+	
+	var known_y3 = selectFutureMsi;
+	var known_x3 = dataGroup;
+	var futureMsi = linearRegression(known_y3, known_x3);
+	
+	firstFutureMsi = futureMsi.slope * 1 + futureMsi.intercept;
+	lastFutureMsi = futureMsi.slope * dataGroup.length + futureMsi.intercept;
+	
+//	alert(firstFutureMsi);
+//	alert(lastFutureMsi);
+	
+}
+//-------------------------------------------------------------------------------------- regression line
+
+function linearRegression(y,x){
+        var lr = {};
+        var n = y.length;
+        var sum_x = 0;
+        var sum_y = 0;
+        var sum_xy = 0;
+        var sum_xx = 0;
+        var sum_yy = 0;
+        
+        for (var i = 0; i < y.length; i++) {
+            
+            sum_x += x[i];
+            sum_y += y[i];
+            sum_xy += (x[i]*y[i]);
+            sum_xx += (x[i]*x[i]);
+            sum_yy += (y[i]*y[i]);
+        } 
+        
+        lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+        lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+        lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+        
+        return lr;
+}
+
+
+
+//var known_y = selectPastMsi;
+//var known_x = dataGroup;
+
+//var pastMsi = linearRegression(known_y, known_x);
+
+
+
+//-------------------------------------------------------------------------------------- graph
+
+
+			google.load("visualization", "1");
+			//google.setOnLoadCallback(setUp);
+			//google.setOnLoadCallback(setUp);
+			
+			function setUpPast()
+			{
+				//var msi = new Array();
+				//var tli = new Array();
+				var lest_tli = firstTli;
+				var biggest_tli = lastTli;
+				
+				
+				var lest_msi = firstPastMsi;
+				var biggest_msi = lastPastMsi;
+				
+			//	alert(lest_msi);
+				
+				var numRows = 25.0;
+				var numCols = 25;
+				var scaleIndex = 25;
+				
+				var tooltipStrings = new Array();
+				var data = new google.visualization.DataTable();
+				
+				for (var i = 0; i < numCols; i++)
+				{
+		        	data.addColumn('number', 'col'+i);
+				}
+				
+		        data.addRows(numRows);
+				var d = 360 / numRows;
+				var idx = 0;
+				
+				for (var i = 1; i <= numRows; i++) 
+				{
+					var msi = Math.abs(biggest_msi - lest_msi) / numRows * i;
+					for (var j = 1; j <= numCols; j++)
+					{
+						
+						var tli = Math.abs(biggest_tli - lest_tli) /numCols *j;
+						//var value = (Math.cos(i * d * Math.PI / 180.0) * Math.cos(j * d * Math.PI / 180.0) + Math.sin(i * d * Math.PI / 180.0));
+						var value =  tli * msi * scaleIndex;
+						//var value = (Math.sin(i * d * Math.PI / 180.0) * Math.cos(j * d * Math.PI / 180.0)) * 1.5;
+						
+						data.setValue(i-1,j-1, value*scaleIndex );
+						
+						tooltipStrings[idx] = "x:" + i + ", y:" + j + " = " + value;
+						idx++;
+					}
+				}
+
+
+				var surfacePlot =  new greg.ross.visualisation.SurfacePlot(document.getElementById("surfacePlotDiv"));
+				
+				
+				// Don't fill polygons in IE. It's too slow.
+				var fillPly = true;
+				
+				// Define a colour gradient.
+				var colour1 = {red:0, green:0, blue:255};
+				var colour2 = {red:0, green:255, blue:255};
+				var colour3 = {red:0, green:255, blue:0};
+				var colour4 = {red:255, green:255, blue:0};
+				var colour5 = {red:255, green:0, blue:0};
+				var colours = [colour1, colour2, colour3, colour4, colour5];
+				
+				// Axis labels.
+				var xAxisHeader	= "MSI";
+				var yAxisHeader	= "TLI";
+				var zAxisHeader	= "OCI";
+				
+				var options = {xPos: 300, yPos: 50, width: 500, height: 500, colourGradient: colours, fillPolygons: fillPly,
+					tooltips: tooltipStrings, xTitle: xAxisHeader, yTitle: yAxisHeader, zTitle: zAxisHeader};
+				
+				surfacePlot.draw(data, options);
+			}
+
+			//---------------------------------------------------------------------------------- graph for future MSI
+			
+			function setUpFuture()
+			{
+				//var msi = new Array();
+				//var tli = new Array();
+				var lest_tli = firstTli;
+				var biggest_tli = lastTli;
+				
+				
+				var lest_msi = firstFutureMsi;
+				var biggest_msi = lastFutureMsi;
+				
+			//	alert(lest_msi);
+				
+				var numRows = 25.0;
+				var numCols = 25;
+				var scaleIndex = 25;
+				
+				var tooltipStrings = new Array();
+				var data = new google.visualization.DataTable();
+				
+				for (var i = 0; i < numCols; i++)
+				{
+		        	data.addColumn('number', 'col'+i);
+				}
+				
+		        data.addRows(numRows);
+				var d = 360 / numRows;
+				var idx = 0;
+				
+				for (var i = 1; i <= numRows; i++) 
+				{
+					var msi = Math.abs(biggest_msi - lest_msi) / numRows * i;
+					for (var j = 1; j <= numCols; j++)
+					{
+						
+						var tli = Math.abs(biggest_tli - lest_tli) /numCols *j;
+						//var value = (Math.cos(i * d * Math.PI / 180.0) * Math.cos(j * d * Math.PI / 180.0) + Math.sin(i * d * Math.PI / 180.0));
+						var value =  tli * msi * scaleIndex;
+						//var value = (Math.sin(i * d * Math.PI / 180.0) * Math.cos(j * d * Math.PI / 180.0)) * 1.5;
+						
+						data.setValue(i-1,j-1, value*scaleIndex );
+						
+						tooltipStrings[idx] = "x:" + i + ", y:" + j + " = " + value;
+						idx++;
+					}
+				}
+
+
+				var surfacePlot =  new greg.ross.visualisation.SurfacePlot(document.getElementById("surfacePlotDiv2"));
+				
+				
+				// Don't fill polygons in IE. It's too slow.
+				var fillPly = true;
+				
+				// Define a colour gradient.
+				var colour1 = {red:0, green:0, blue:255};
+				var colour2 = {red:0, green:255, blue:255};
+				var colour3 = {red:0, green:255, blue:0};
+				var colour4 = {red:255, green:255, blue:0};
+				var colour5 = {red:255, green:0, blue:0};
+				var colours = [colour1, colour2, colour3, colour4, colour5];
+				
+				// Axis labels.
+				var xAxisHeader	= "MSI";
+				var yAxisHeader	= "TLI";
+				var zAxisHeader	= "OCI";
+				
+				var options = {xPos: 300, yPos: 50, width: 500, height: 500, colourGradient: colours, fillPolygons: fillPly,
+					tooltips: tooltipStrings, xTitle: xAxisHeader, yTitle: yAxisHeader, zTitle: zAxisHeader};
+				
+				surfacePlot.draw(data, options);
+			}
+
+
+//------------------------------------------------------------------------------------------- Jqury to store data in Excel
+			
+			
+$(document).ready(function() {
+    $("#excelExport").click(function(e) {
+        //getting values of current time for generating the file name
+        var dt = new Date();
+        var day = dt.getDate();
+        var month = dt.getMonth() + 1;
+        var year = dt.getFullYear();
+        var hour = dt.getHours();
+        var mins = dt.getMinutes();
+        var postfix = day + "." + month + "." + year + "_" + hour + "." + mins;
+        //creating a temporary HTML link element (they support setting file names)
+        var a = document.createElement('a');
+        //getting data from our div that contains the HTML table
+        var data_type = 'data:application/vnd.ms-excel';
+        
+/*  	    var table_div = document.getElementById('surfacePlotDiv');
+		var table_html = table_div.outerHTML.replace(/ /g, '%20');
+        a.href = data_type + ', ';
+        a.href = a.href + table_html ;
+        
+        
+	    var table_div = document.getElementById('surfacePlotDiv2');
+		var table_html = table_div.outerHTML.replace(/ /g, '%20');	
+        a.href = a.href + table_html ;  */
+        
+        a.href = data_type + ', ';
+        var table_div = 0;
+        var table_html = 0;
+ 	    for(var i=1; i<=past_msi_p_array.length; i++)
+	    {
+ 		    table_div = document.getElementById('dyna'+ i);
+ 			table_html = table_div.outerHTML.replace(/ /g, '%20');	
+		   	a.href = a.href + table_html ;
+	            
+	    } 
+
+        //setting the file name
+        a.download = 'MSI_' + postfix + '.xls';
+        //triggering the function
+        a.click();
+        //just in case, prevent default behaviour
+        e.preventDefault();
+    });
+});
+
+
+
+//-----------------------------------------------------------------------------------
+
+function loadContent()														// Jqury to define the HTML
+{
+//	$("input").attr('required','required');
+//	$("#seqTable input").attr('onkeypress',"return seqOnClick(event);");
+//	$("table").attr("class","table1");
+	$("td").attr("class","td1");
+	$("th").attr("class","th1");
+//	$("input").attr("value","1");
+	$("#AHP input").attr("value","0");
+	$("#AHP input").attr("min","-8");
+	$("#AHP input").attr("max","8");
+	$("#AHP input").each(function(){
+	    
+		$(this).change();
+		
+	}); 
+}
+
+
+//--------------------------------------------------------------------------HTML
+
+</script>
+
+
+
+<body onload="loadContent();">
+
+
+<form class="margin">
+
+<!-- 		<table >
+		<tr>
+		<th><i>The List of Questionnaires</i></th>
+		</tr>
+		<tr>
+		<td><b>1, MSI and TLI</b></td>
+		</tr>
+		<tr>
+		<td><a href='http://app.cc.puv.fi/e0900766_questionnaire2/sensor.html'><b>2, Sensor and Response</b></a></td>
+		</tr>
+		</table> -->
+		
+		<table>
+		<tr>
+		<th><i>The List of Questionnaires</i></th>
+		</tr>
+		<tr>
+		<td><b>1, MSI and TLI</b></td>
+		</tr>
+		<tr>
+		<td><b>2, Sensor and Response Form</b>
+				<ul>
+		  			<li><a href='sensor.html'><b>Form #1</b></a></li>
+		  			<li><a href='sensor2.html'><b>Form #2</b></a></li>
+		  		</ul>
+		</td>
+		</tr>
+		</table>
+		
+		
+		
+		<h2><b>MSI and TLI Questionnaire</b></h2>
+		
+		
+
+		<table>
+			<tr>
+				<td>Company Name</td>
+				<td><input type="text" name="CompanyName"></td>
+			</tr>
+		</table>
+</form>
+
+
+	<form name="category" method="post" action="ClientPost" class="margin" id="top">
+
+
+<div id="myDynamicTable">
+
+
+</div>
+
+	<br/>
+	
+	<br/>
+	<h2>You are the Inquirer No. <b><span id="count">1</span></b></h2>
+
+		
+		<br/>
+		<p>
+			<b>1, Manufacturing Strategy Questionnaire</b>
+		</p>
+		
+		<p>1 Past Manufacturing Strategy</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>Cost</td>
+				<td><input name="q111" type="range" step="1" onchange="showValue(this.value,'range111',0)" /></td>
+				<td>Quality</td>
+				<td><span id="range111">0</span></td>
+			</tr>
+			<tr>
+				<td>Cost</td>
+				<td><input name="q112" type="range" step="1" onchange="showValue(this.value,'range112',0)" /></td>
+				<td>Delivery</td>
+				<td><span id="range112">0</span></td>
+			</tr>
+			<tr>
+				<td>Cost</td>
+				<td><input name="q113" type="range" step="1" onchange="showValue(this.value,'range113',0)" /></td>
+				<td>Flexibility</td>
+				<td><span id="range113">0</span></td>
+			</tr>
+			<tr>
+				<td>Quality</td>
+				<td><input name="q114" type="range" step="1" onchange="showValue(this.value,'range114',0)" /></td>
+				<td>Delivery</td>
+				<td><span id="range114">0</span></td>
+			</tr>
+			<tr>
+				<td>Quality</td>
+				<td><input name="q115" type="range" step="1" onchange="showValue(this.value,'range115',0)" /></td>
+				<td>Flexibility</td>
+				<td><span id="range115">0</span></td>
+			</tr>
+			<tr>
+				<td>Delivery</td>
+				<td><input name="q116" type="range" step="1" onchange="showValue(this.value,'range116',0)" /></td>
+				<td>Flexibility</td>
+				<td><span id="range116">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>Cost</td>
+				<!-- <td><span id="cost1">0</span></td> -->
+				<td><input type="text" name="C0" id="m01" readonly></td>
+			</tr>
+			<tr>
+				<td>Quality</td>
+				<td><input type="text" name="Q0" id="m02" readonly></td>
+			</tr>
+			<tr>
+				<td>Delivery</td>
+				<td><input type="text" name="T0" id="m03" readonly></td>
+			</tr>
+			<tr>
+				<td>Flexibility</td>
+				<td><input type="text" name="F0" id="m04" readonly></td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q201" id="m05" readonly></td>
+			</tr>
+		</table>
+
+
+<p>2 Future Manufacturing Strategy</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>Cost</td>
+				<td><input name="q121" type="range" step="1" onchange="showValue(this.value,'range121',1)" /></td>
+				<td>Quality</td>
+				<td><span id="range121">0</span></td>
+			</tr>
+			<tr>
+				<td>Cost</td>
+				<td><input name="q122" type="range" step="1" onchange="showValue(this.value,'range122',1)" /></td>
+				<td>Delivery</td>
+				<td><span id="range122">0</span></td>
+			</tr>
+			<tr>
+				<td>Cost</td>
+				<td><input name="q123" type="range" step="1" onchange="showValue(this.value,'range123',1)" /></td>
+				<td>Flexibility</td>
+				<td><span id="range123">0</span></td>
+			</tr>
+			<tr>
+				<td>Quality</td>
+				<td><input name="q124" type="range" step="1" onchange="showValue(this.value,'range124',1)" /></td>
+				<td>Delivery</td>
+				<td><span id="range124">0</span></td>
+			</tr>
+			<tr>
+				<td>Quality</td>
+				<td><input name="q125" type="range" step="1" onchange="showValue(this.value,'range125',1)" /></td>
+				<td>Flexibility</td>
+				<td><span id="range125">0</span></td>
+			</tr>
+			<tr>
+				<td>Delivery</td>
+				<td><input name="q126" type="range" step="1" onchange="showValue(this.value,'range126',1)" /></td>
+				<td>Flexibility</td>
+				<td><span id="range126">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>Cost</td>
+				<!-- <td><span id="cost1">0</span></td> -->
+				<td><input type="text" name="C1" id="m11" readonly></td>
+			</tr>
+			<tr>
+				<td>Quality</td>
+				<td><input type="text" name="Q1" id="m12" readonly></td>
+			</tr>
+			<tr>
+				<td>Delivery</td>
+				<td><input type="text" name="T1" id="m13" readonly></td>
+			</tr>
+			<tr>
+				<td>Flexibility</td>
+				<td><input type="text" name="F1" id="m14" readonly></td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q201" id="m15" readonly></td>
+			</tr>
+		</table>
+
+
+
+
+
+
+
+		<br /> <br />
+
+
+		<p>
+			<b>2, Transformational Leadership Questionnaire</b>
+		</p>
+		<p>3</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>Utilizes Individual Consideration</td>
+				<td><input name="q211" type="range" step="1" onchange="showValue(this.value,'range211',2)" /></td>
+				<td>Support and Encourages</td>
+				<td><span id="range211">0</span></td>
+			</tr>
+			<tr>
+				<td>Utilizes Individual Consideration</td>
+				<td><input name="q212" type="range" step="1" onchange="showValue(this.value,'range212',2)" /></td>
+				<td>Emphasize Creativity and Learning</td>
+				<td><span id="range212">0</span></td>
+			</tr>
+			<tr>
+				<td>Utilizes Individual Consideration</td>
+				<td><input name="q213" type="range" step="1" onchange="showValue(this.value,'range213',2)" /></td>
+				<td>Act As An Example</td>
+				<td><span id="range213">0</span></td>
+			</tr>
+			<tr>
+				<td>Support and Encourages</td>
+				<td><input name="q214" type="range" step="1" onchange="showValue(this.value,'range214',2)" /></td>
+				<td>Emphasize Creativity and Learning</td>
+				<td><span id="range214">0</span></td>
+			</tr>
+			<tr>
+				<td>Support and Encourages</td>
+				<td><input name="q215" type="range" step="1" onchange="showValue(this.value,'range215',2)" /></td>
+				<td>Act As An Example</td>
+				<td><span id="range215">0</span></td>
+			</tr>
+			<tr>
+				<td>Emphasize Creativity and Learning</td>
+				<td><input name="q216" type="range" step="1" onchange="showValue(this.value,'range216',2)" /></td>
+				<td>Act As An Example</td>
+				<td><span id="range216">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>Utilizes Individual Consideration</td>
+				<td><input type="text" name="Aa" id="m21" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Support and Encourages</td>
+				<td><input type="text" name="Ab" id="m22" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Emphasize Creativity and Learning</td>
+				<td><input type="text" name="Ac" id="m23" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Act As An Example</td>
+				<td><input type="text" name="Ad" id="m24" readonly>%</td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q2201" id="m25" readonly>%</td>
+			</tr>
+		</table>
+
+
+		<br />
+
+		<p>4</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>Utilizes Genuine Interest of Other People</td>
+				<td><input name="q221" type="range" step="1" onchange="showValue(this.value,'range221',3)" /></td>
+				<td>Motivates and Rewards</td>
+				<td><span id="range221">0</span></td>
+			</tr>
+			<tr>
+				<td>Utilizes Genuine Interest of Other People</td>
+				<td><input name="q222" type="range" step="1" onchange="showValue(this.value,'range222',3)" /></td>
+				<td>Encourage and Challenges to Develop</td>
+				<td><span id="range222">0</span></td>
+			</tr>
+			<tr>
+				<td>Utilizes Genuine Interest of Other People</td>
+				<td><input name="q223" type="range" step="1" onchange="showValue(this.value,'range223',3)" /></td>
+				<td>Utilizes the Mutual Trust</td>
+				<td><span id="range223">0</span></td>
+			</tr>
+			<tr>
+				<td>Motivates and rewards</td>
+				<td><input name="q224" type="range" step="1" onchange="showValue(this.value,'range224',3)" /></td>
+				<td>Encourage and Challenges to Develop</td>
+				<td><span id="range224">0</span></td>
+			</tr>
+			<tr>
+				<td>Motivates and rewards</td>
+				<td><input name="q225" type="range" step="1" onchange="showValue(this.value,'range225',3)" /></td>
+				<td>Utilizes the Mutual Trust</td>
+				<td><span id="range225">0</span></td>
+			</tr>
+			<tr>
+				<td>Encourage and Challenges to Develop</td>
+				<td><input name="q226" type="range" step="1" onchange="showValue(this.value,'range226',3)" /></td>
+				<td>Utilizes the Mutual Trust</td>
+				<td><span id="range226">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>Utilizes Genuine Interest of Other People</td>
+				<td><input type="text" name="Ba" id="m31" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Motivates and Rewards</td>
+				<td><input type="text" name="Bb" id="m32" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Encourage and Challenges to Develop</td>
+				<td><input type="text" name="Bc" id="m33" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Utilizes the Mutual Trust</td>
+				<td><input type="text" name="Bd" id="m34" readonly>%</td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q2301" id="m35" readonly>%</td>	
+			</tr>
+		</table>
+
+
+
+
+		<br />
+
+		<p>5</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>Operational Business Process and Work Flow</td>
+				<td><input name="q231" type="range" step="1" onchange="showValue(this.value,'range231',4)" /></td>
+				<td>Utilize the Know-how</td>
+				<td><span id="range231">0</span></td>
+			</tr>
+			<tr>
+				<td>Operational Business Process and Work Flow</td>
+				<td><input name="q232" type="range" step="1" onchange="showValue(this.value,'range232',4)" /></td>
+				<td>Utilizes the Information Systems</td>
+				<td><span id="range232">0</span></td>
+			</tr>
+			<tr>
+				<td>Operational Business Process and Work Flow</td>
+				<td><input name="q233" type="range" step="1" onchange="showValue(this.value,'range233',4)" /></td>
+				<td>Utilizes different organizing practices such teams,
+					matrixes, projects, etc.</td>
+				<td><span id="range233">0</span></td>
+			</tr>
+			<tr>
+				<td>Utilize the Know-how</td>
+				<td><input name="q234" type="range" step="1" onchange="showValue(this.value,'range234',4)" /></td>
+				<td>Utilizes the Information Systems</td>
+				<td><span id="range234">0</span></td>
+			</tr>
+			<tr>
+				<td>Utilize the Know-how</td>
+				<td><input name="q235" type="range" step="1" onchange="showValue(this.value,'range235',4)" /></td>
+				<td>Utilizes different organizing practices such teams,
+					matrixes, projects, etc.</td>
+				<td><span id="range235">0</span></td>
+			</tr>
+			<tr>
+				<td>Utilizes the Information Systems</td>
+				<td><input name="q236" type="range" step="1" onchange="showValue(this.value,'range236',4)" /></td>
+				<td>Utilizes different organizing practices such teams,
+					matrixes, projects, etc.</td>
+				<td><span id="range236">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>Operational Business Process and Work Flow</td>
+				<td><input type="text" name="Ca" id="m41" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Utilize the Know-how</td>
+				<td><input type="text" name="Cb" id="m42" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Utilizes the Information Systems</td>
+				<td><input type="text" name="Cc" id="m43" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Utilizes different organizing practices such teams,
+					matrixes, projects, etc.</td>
+				<td><input type="text" name="Cd" id="m44" readonly>%</td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q2401" id="m45" readonly>%</td>
+			</tr>
+		</table>
+
+		<br />
+
+		<p>6</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>Achieves the Settled Goals</td>
+				<td><input name="q241" type="range" step="1" onchange="showValue(this.value,'range241',5)" /></td>
+				<td>Succeeds as a leader</td>
+				<td><span id="range241">0</span></td>
+			</tr>
+			<tr>
+				<td>Achieves the Settled Goals</td>
+				<td><input name="q242" type="range" step="1" onchange="showValue(this.value,'range242',5)" /></td>
+				<td>Create Entrepreneurship to the Team</td>
+				<td><span id="range242">0</span></td>
+			</tr>
+			<tr>
+				<td>Succeeds as a leader</td>
+				<td><input name="q243" type="range" step="1" onchange="showValue(this.value,'range243',5)" /></td>
+				<td>Create Entrepreneurship to the Team</td>
+				<td><span id="range243">0</span></td>
+			</tr>
+			<tr>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>Achieves the Settled Goals</td>
+				<td><input type="text" name="Da" id="m51" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Succeeds as a leader</td>
+				<td><input type="text" name="Db" id="m52" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Create Entrepreneurship to the Team</td>
+				<td><input type="text" name="Dc" id="m53" readonly>%</td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q247" id="m54" readonly>%</td>
+			</tr>
+		</table>
+
+		<br />
+
+		<p>7</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>The goals are often even surpasses</td>
+				<td><input name="q251" type="range" step="1" onchange="showValue(this.value,'range251',6)" /></td>
+				<td>Leadership corresponds to the expectations</td>
+				<td><span id="range251">0</span></td>
+			</tr>
+			<tr>
+				<td>The goals are often even surpasses</td>
+				<td><input name="q252" type="range" step="1" onchange="showValue(this.value,'range252',6)" /></td>
+				<td>People are willing to do even extra effort</td>
+				<td><span id="range252">0</span></td>
+			</tr>
+			<tr>
+				<td>Leadership corresponds to the expectations</td>
+				<td><input name="q253" type="range" step="1" onchange="showValue(this.value,'range253',6)" /></td>
+				<td>People are willing to do even extra effort</td>
+				<td><span id="range253">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>The goals are often even surpasses</td>
+				<td><input type="text" name="Ea" id="m61" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Leadership corresponds to the expectations</td>
+				<td><input type="text" name="Eb" id="m62" readonly>%</td>
+			</tr>
+			<tr>
+				<td>People are willing to do even extra effort</td>
+				<td><input type="text" name="Ec" id="m63" readonly>%</td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q257" id="m64" readonly>%</td>
+			</tr>
+		</table>
+
+		<br />
+
+		<p>8</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>The Decision can be made slightly late and by avoiding
+					situations</td>
+				<td><input name="q261" type="range" step="1" onchange="showValue(this.value,'range261',7)" /></td>
+				<td>Mistake must be examined, corrected and sometimes those who
+					are responsible must be punished</td>
+				<td><span id="range261">0</span></td>
+			</tr>
+			<tr>
+				<td>The Decision can be made slightly late and by avoiding
+					situations</td>
+				<td><input name="q262" type="range" step="1" onchange="showValue(this.value,'range262',7)" /></td>
+				<td>Creativity, learning and "as an example" behavior must be
+					emphasized</td>
+				<td><span id="range262">0</span></td>
+			</tr>
+			<tr>
+				<td>Mistake must be examined, corrected and sometimes those who
+					are responsible must be punished</td>
+				<td><input name="q263" type="range" step="1" onchange="showValue(this.value,'range263',7)" /></td>
+				<td>Creativity, learning and "as an example" behavior must be
+					emphasized</td>
+				<td><span id="range263">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>The Decision can be made slightly late and by avoiding
+					situations</td>
+				<td><input type="text" name="Fa" id="m71" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Mistake must be examined, corrected and sometimes those who
+					are responsible must be punished</td>
+				<td><input type="text" name="Fb" id="m72" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Creativity, learning and "as an example" behavior must be
+					emphasized</td>
+				<td><input type="text" name="Fc" id="m73" readonly>%</td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q267" id="m74" readonly>%</td>
+			</tr>
+		</table>
+
+		<br />
+
+		<p>9</p>
+		<table id="AHP" class="table1">
+			<tr>
+				<th>Attributes</th>
+				<th>Comparison</th>
+				<th>Attributes</th>
+				<th>Values</th>
+			</tr>
+			<tr>
+				<td>The work can be done alone independent and intervene only
+					if necessary</td>
+				<td><input name="q271" type="range" step="1" onchange="showValue(this.value,'range271',8)" /></td>
+				<td>The Job tasks must be monitored and done as much as
+					possible by yourself</td>
+				<td><span id="range271">0</span></td>
+			</tr>
+			<tr>
+				<td>The work can be done alone independent and intervene only
+					if necessary</td>
+				<td><input name="q272" type="range" step="1" onchange="showValue(this.value,'range272',8)" /></td>
+				<td>Simulaing, encouraging and utilizing individual
+					consideration is important</td>
+				<td><span id="range272">0</span></td>
+			</tr>
+			<tr>
+				<td>The Job tasks must be monitored and done as much as
+					possible by yourself</td>
+				<td><input name="q273" type="range" step="1" onchange="showValue(this.value,'range273',8)" /></td>
+				<td>Simulaing, encouraging and utilizing individual
+					consideration is important</td>
+				<td><span id="range273">0</span></td>
+			</tr>
+		</table>
+
+		<table class="table1">
+			<tr>
+				<td>The work can be done alone independent and intervene only if necessary</td>
+				<td><input type="text" name="Ga" id="m81" readonly>%</td>
+			</tr>
+			<tr>
+				<td>The Job tasks must be monitored and done as much as
+					possible by yourself</td>
+				<td><input type="text" name="Gb" id="m82" readonly>%</td>
+			</tr>
+			<tr>
+				<td>Simulaing, encouraging and utilizing individual
+					consideration is important</td>
+				<td><input type="text" name="Gc" id="m83" readonly>%</td>
+			</tr>
+			<tr>
+				<td><i>Inconsistency</i></td>
+				<td><input type="text" name="q277" id="m84" readonly>%</td>
+			</tr>
+		</table>
+
+		<br />
+
+		<p>2.8, Please fill in the demanded weight of different technology levels from your own leadership point of view</p>
+		<table class="table1">
+			<tr>
+				<td>Spearhead Technology:</td>
+				<td><input onkeydown="return onDelete2(event)"
+					onkeypress="return isNumberKey2(event)" type="text" name="SH">%</td>
+			</tr>
+			<tr>
+				<td>Core Technology:</td>
+				<td><input onkeydown="return onDelete2(event)"
+					onkeypress="return isNumberKey2(event)" type="text" name="CR">%</td>
+			</tr>
+			<tr>
+				<td>Basic Technology:</td>
+				<td><input onkeydown="return onDelete2(event)"
+					onkeypress="return isNumberKey2(event)" type="text" name="BS">%</td>
+			</tr>
+			<tr>
+				<td><i>Remainder:</i></td>
+				<td><input type="text" name="remainder2" min="0" max="100" readonly/>%</td>
+			</tr>
+		</table>
+
+		<br />
+		
+		<table class="table1">
+			<tr>
+				<td><b>Past Manufacturing Strategy Index</b></td>
+				<td><i><b>Prospector</b></i><br/><input type="text" name="past_msi_p" readonly></td>
+				<td><i><b>Analysor</b></i><br/><input type="text" name="past_msi_a" readonly></td>
+				<td><i><b>Defender</b></i><br/><input type="text" name="past_msi_d" readonly></td>
+			</tr>
+			<tr>
+				<td><b>Future Manufacturing Strategy Index</b></td>
+				<td><br/><input type="text" name="future_msi_p" readonly></td>
+				<td><br/><input type="text" name="future_msi_a" readonly></td>
+				<td><br/><input type="text" name="future_msi_d" readonly></td>
+			</tr>	
+			<tr>
+				<td><b>Transformational Leadership Index</b></td>
+				<td><i><b>Overall</b><br/></i><input type="text" name="tli" readonly></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><b>Past Overall Competitiveness Index</b></td>
+				<td><br/><input type="text" name="past_oc_p" readonly></td>
+				<td><br/><input type="text" name="past_oc_a" readonly></td>
+				<td><br/><input type="text" name="past_oc_d" readonly></td>
+			</tr>
+			<tr>
+				<td><b>Future Overall Competitiveness Index</b></td>
+				<td><br/><input type="text" name="future_oc_p" readonly></td>
+				<td><br/><input type="text" name="future_oc_a" readonly></td>
+				<td><br/><input type="text" name="future_oc_d" readonly></td>
+			</tr>
+		</table>
+		
+		
+		<br />
+		 <input type="button" size="10" class="left" value="Calculate" onclick = "if(checkValidAll()){msiValue(); tliValue(); ocValue();}"/>
+		 <input type="button" class="right" size="10" value="Delete Previous" onclick = "dele();">
+		 <a href="#count"><input type="button" class="left" size="10" value="Submit & Next Person" onclick= "this.form.reset(); nextPerson(); loadContent();"></a>
+
+		<br/>
+		<br/>
+		<table class = "table2">
+			<tr>
+				<td><input type="radio" name="companyType" value="0" />Prospector<br/>   
+					<input type="radio" name="companyType" value="1" />Analyzer<br/>
+					<input type="radio" name="companyType" value="2" />Defender</td>
+			</tr>
+			<tr>
+				<td><input type= "button" class="left" size="10" value="Graph" onclick = "selectType(); setUpPast(); setUpFuture();">
+				<input type ="button" id="excelExport" class="right2" size="10" value="Output Excel"></td>
+				
+			</tr>
+		</table>
+
+		<div id='surfacePlotDiv'><h2>The Past OCI graph</h2></div>
+		<br/>
+		<div id='surfacePlotDiv2'><h2>The Future OCI graph</h2></div>
+
+			<a href="#top">back to top</a>
+
+	</form>
+</body>
+</html>
+

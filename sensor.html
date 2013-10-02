@@ -1,0 +1,1522 @@
+<html>
+<head>
+<title>Sensor and Response</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<link href="Metro-UI-CSS-master/css/modern.css" rel="stylesheet">
+<link href="Metro-UI-CSS-master/css/modern-responsive.css" rel="stylesheet">
+<link href="prettify.css" rel="stylesheet" type="text/css">
+
+<script src="jquery-1.8.3.min.js"></script>
+
+</head>
+
+
+
+<script>
+//-------------------------------------- _Lu
+function changeInputlength(text) 
+{ 
+		if(text.value)
+			text.size=text.value.length/1.1;  
+} 
+
+
+function sendemail(emailadressid,file)
+{
+	var _validFileExtensions =".xls";
+	var emailadress=document.getElementById(emailadressid).value;
+	var filename=document.getElementById(file).value;
+	var form=document.getElementById('sendemail');
+
+	if((!emailadress)||(!filename))
+	{
+		alert("Somewhere empty...");
+		return;
+	}
+	else
+		if(filename.substr(filename.length - _validFileExtensions.length, _validFileExtensions.length).toLowerCase() != _validFileExtensions.toLowerCase())
+		{
+				alert("Sorry, that is not the result file, it should be .xls extension");
+				return;
+		}
+	else
+	{
+		var r=confirm("Are you sure to send the email and LEAVE this page?");
+		if(r==true)
+		{
+			form.submit();
+		}
+	}
+	
+
+}
+
+
+//----------------------------------------------------------
+
+function seqOnClick(evt)											// this function limites the input value within 1 and 10
+{
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if (charCode > 31 && (charCode < 48 || charCode > 57) )
+		return false;
+	var expectedValue = (evt.srcElement.value*10+(charCode-48)) ;
+	if( expectedValue >10 || expectedValue < 1)
+	{
+		//alert("The value must between 1 and 10");
+		return false;
+	}
+} 
+
+//----------------------------------------------------------
+
+function Matrix() {													// this function defines matrix
+	
+	this.rows = new Array();
+}
+
+
+
+function sum(someArray)												// calculate the sum of array
+{
+	var total = 0;
+	for (var i = 0; i < someArray.length; i++) {
+			total += parseFloat(someArray[i]);
+		}
+		return total;
+}
+
+
+//-----------------------------------------------------------
+
+
+	var myArray = new Array(); 																				//define a public array
+
+
+function nextPerson()
+	{
+	
+		
+	var sensorData = new Matrix();																			// picking up the right value for the matrix from HTML															
+	var pastDevelopment;
+	var futureDevelopment;
+	
+	
+	
+		for(var i=0; i<21; i++)
+		{
+			pastDevelopment = null;
+			futureDevelopment = null;
+			
+	 		var radios = document.getElementsByName('pi'+(i+1));		
+			for (var j = 0; j < radios.length; j++) 
+			{
+			    if (radios[j].checked)
+			    {
+			        pastDevelopment = new Number(radios[j].value);
+			    }
+			}
+			 
+			var radios = document.getElementsByName('fi'+(i+1));
+			for (var j = 0; j < radios.length; j++) 
+			{
+			    if (radios[j].checked)
+			    {
+			    	futureDevelopment = new Number(radios[j].value);
+			    }
+			}
+			
+			
+			sensorData.rows[i] = new Array(document.getElementsByName('et'+(i+1))[0].value,
+										   document.getElementsByName('ep'+(i+1))[0].value,
+										   pastDevelopment,
+										   futureDevelopment)
+			
+		} 
+		
+
+		
+	
+ 	/* sensorData.rows[0] = new Array(document.getElementsByName("et01")[0].value,"ep01","pi01","fi01");
+	
+//	sensorData.rows[0] = new Array("et01","ep01","pi01","fi01");
+	sensorData.rows[1] = new Array("et02","ep02","pi02","fi02");
+	sensorData.rows[2] = new Array("et03","ep03","pi03","fi03");
+	sensorData.rows[3] = new Array("et04","ep04","pi04","fi04");
+	sensorData.rows[4] = new Array("et05","ep05","pi05","fi05");
+	sensorData.rows[5] = new Array("et06","ep06","pi06","fi06");
+	sensorData.rows[6] = new Array("et07","ep07","pi07","fi07");
+	sensorData.rows[7] = new Array("et08","ep08","pi08","fi08");
+	sensorData.rows[8] = new Array("et09","ep09","pi09","fi09");
+	sensorData.rows[9] = new Array("et10","ep10","pi10","fi10");
+	sensorData.rows[10] = new Array("et11","ep11","pi11","fi11");
+	sensorData.rows[11] = new Array("et12","ep12","pi12","fi12");
+	sensorData.rows[12] = new Array("et13","ep13","pi13","fi13");
+	sensorData.rows[13] = new Array("et14","ep14","pi14","fi14");
+	sensorData.rows[14] = new Array("et15","ep15","pi15","fi15");
+	sensorData.rows[15] = new Array("et16","ep16","pi16","fi16");
+	sensorData.rows[16] = new Array("et17","ep17","pi17","fi17");
+	sensorData.rows[17] = new Array("et18","ep18","pi18","fi18");
+	sensorData.rows[18] = new Array("et19","ep19","pi19","fi19");
+	sensorData.rows[19] = new Array("et20","ep20","pi20","fi20");
+	sensorData.rows[20] = new Array("et21","ep21","pi21","fi21");  */
+	
+	//alert(sensorData.rows[0][0]); 
+	
+	myArray.push(sensorData);
+	
+//	alert(myArray.length);
+	
+	document.getElementById('count').innerHTML = myArray.length + 1;				// show the number of inquirers
+	
+	
+//	document.getElementById('count').innerHTML++;
+
+//	alert(myArray[0].rows[0][0]); 
+//	alert(myArray[0].rows[20][0]); 
+
+
+/* 		try
+		{
+		alert(myArray[1].rows[0][0]);
+		}
+	catch(err)
+		{
+		
+		}  
+		try
+		{
+		alert(myArray[1].rows[20][0]);
+		}
+	catch(err)
+		{
+		
+		} 
+ */
+
+	
+	
+	 var myTableDiv = document.getElementById("myDynamicTable");				//create dynamic table to store submitted data
+     
+	 var table = document.createElement('TABLE');
+	 table.border='1';
+	 table.id='dyna'+ myArray.length;
+	 	 
+
+	 
+	 var tableCaption = document.createElement('CAPTION');
+	 tableCaption.appendChild(document.createTextNode("NO." + myArray.length));
+	 table.appendChild(tableCaption);
+	 
+	 var tableHead = document.createElement('THEAD');
+	 table.appendChild(tableHead);
+	 var tr = document.createElement('TR');
+	 tableHead.appendChild(tr);
+	 
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     var attributesrealname=document.getElementById("Attributeid");
+     bold.appendChild(document.createTextNode(attributesrealname.value));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     var Expectationrealname=document.getElementById("Expectationid");     
+     bold.appendChild(document.createTextNode(Expectationrealname.value));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     var Experiencerealname=document.getElementById("Experienceid");      
+     bold.appendChild(document.createTextNode(Experiencerealname.value));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     var PastDevelopmentrealname=document.getElementById("PastDevelopmentid");      
+     bold.appendChild(document.createTextNode(PastDevelopmentrealname.value));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     var th = document.createElement('TH');
+     var bold = document.createElement('B');
+     var Futurerealname=document.getElementById("FutureDevelopmentid");     
+     bold.appendChild(document.createTextNode(Futurerealname.value));
+     th.appendChild(bold);
+     tr.appendChild(th);
+     
+	 var tableBody = document.createElement('TBODY');
+	 table.appendChild(tableBody);
+	 
+	 for (var i=0; i<21; i++)
+	 {
+	       var tr = document.createElement('TR');
+	       tableBody.appendChild(tr);
+	       
+/* 	       for (var j=0; j<4; j++)
+	       {
+	           var td = document.createElement('TD');
+	           td.width='25';
+	           td.appendChild(document.createTextNode(sensorData.rows[i][j]));
+	           tr.appendChild(td);
+	  	   } */
+	 
+	       var td = document.createElement('TD');	   
+	  	   var bold = document.createElement('B');
+
+	  	   var attributename=document.getElementById("Attribute3"+(i+1)+"id");
+	  	   bold.appendChild(document.createTextNode(attributename.value));
+	  	   
+	  	   td.appendChild(bold);
+	       tr.appendChild(td);
+	       
+	       var td = document.createElement('TD');
+	  	   td.appendChild(document.createTextNode(sensorData.rows[i][0]));
+	       tr.appendChild(td);
+	       var td = document.createElement('TD');
+	  	   td.appendChild(document.createTextNode(sensorData.rows[i][1]));
+	       tr.appendChild(td);
+	       
+	       var td = document.createElement('TD');       												/////////////////////////////////////////
+	       if(sensorData.rows[i][2]=="-1")
+	  	   {
+	  		   td.appendChild(document.createTextNode("Worse"));
+	  	   }
+	       else if(sensorData.rows[i][2]=="0")
+	       {
+	  		   td.appendChild(document.createTextNode("Same"));
+	  	   }
+	       else if(sensorData.rows[i][2]=="1")
+	       {
+	  		   td.appendChild(document.createTextNode("Better"));
+	  	   }
+	  	   tr.appendChild(td);
+	  	   
+	       var td = document.createElement('TD');
+	       if(sensorData.rows[i][3]=="-1")
+	  	   {
+	  		   td.appendChild(document.createTextNode("Worse"));
+	  	   }
+	       else if(sensorData.rows[i][3]=="0")
+	       {
+	  		   td.appendChild(document.createTextNode("Same"));
+	  	   }
+	       else if(sensorData.rows[i][3]=="1")
+	       {
+	  		   td.appendChild(document.createTextNode("Better"));
+	  	   }
+	  	   tr.appendChild(td);
+	       tr.appendChild(td);
+	  	   
+	 
+	 
+	 }
+	    
+	 myTableDiv.appendChild(table);
+	
+
+	$(".NumberInput").attr("value","");	
+	$(".RadioInput").attr("checked",false);	
+
+	} 
+	
+	
+	
+	
+	
+
+function dele()																//delete previous submitted data(array)
+{
+	
+	if (confirm('Are you sure you want to delete the previous data?')) {
+		
+		var tables = document.getElementById('dyna'+ myArray.length);		// delete previous dynamic table
+		
+	    tables.parentNode.removeChild(tables);
+		
+		
+		myArray.pop();
+		
+		document.getElementById('count').innerHTML = myArray.length + 1;
+	
+	} else {
+	   
+	}
+	
+
+	//alert(myArray.length);
+}
+
+	
+	
+	
+
+
+
+function allValues()
+	{
+ 		var sumExpectation = 0;
+		var sumExperience = 0;
+		
+		var avgExpectation = 0;
+		var avgExperience = 0;
+		
+		var importanceIndex = 0;
+		var performanceIndex = 0;
+		
+		var gapIndex = 0;
+		var newGapIndex=0;
+ 		
+		var pastIndex = 0;						// past development index
+		var sumPastIndex = 0;
+		var newPastIndex = 0;
+		
+		var futureIndex = 0;					// future development index
+		var sumFutureIndex = 0;
+		var newFutureIndex = 0;
+		
+		var expectationIndex=0;
+		var newExpectationIndex = 0;
+		var sumExpectationIndex = 0;
+		var newSumExpectationIndex =0;
+		
+		var experienceIndex=0;
+		var newExperienceIndex=0
+		var sumExperienceIndex=0;
+		var newSumExperienceIndex = 0;
+		
+		var expectationList = new Array();
+		var stdExpectation = 0;
+		
+		var experienceList = new Array();
+		var stdExperience = 0;
+		
+		var SDExpectation = 0;
+		var SDExperience = 0;
+		
+		var cfiPast = 0;
+		var sumCfiPast = 0;
+		var cfiPastPercent = new Array();
+		var cfiPastList = new Array();
+		
+		var cfiFuture = 0;
+		var sumCfiFuture=0;
+		var cfiFuturePercent = new Array();
+		var cfiFutureList = new Array();
+		
+ 		var bcfiPast = 0;
+ 		var sumBcfiPast = 0;
+ 		var bcfiPastPercent = new Array();
+ 		var bcfiPastList = new Array();
+		
+ 		var bcfiFuture = 0;
+ 		var sumBcfiFuture = 0;
+ 		var bcfiFuturePercent = new Array();
+ 		var bcfiFutureList = new Array();
+
+ 		var scfiPast = 0;
+ 		var sumScfiPast = 0;
+ 		var scfiPastPercent = new Array();
+ 		var scfiPastList = new Array();
+ 		
+		var scfiFuture = 0;
+		var sumScfiFuture = 0;
+		var scfiFuturePercent = new Array();
+		var scfiFutureList = new Array();
+ 		
+		var newScfiPast = 0;
+		var sumNewScfiPast = 0;
+		var newScfiPastList = new Array();
+		var newScfiPastPercent = new Array();
+		
+		var newScfiFuture = 0;
+		var sumNewScfiFuture = 0;
+		var newScfiFutureList = new Array();
+		var newScfiFuturePercent = new Array();
+		
+			for(var j=0; j<21; j++)
+			{
+				
+				expectationList = [];			
+				experienceList = [];
+				
+				for(var i=0; i<myArray.length; i++)
+				{
+				
+					sumExpectation = sumExpectation + parseInt(myArray[i].rows[j][0]);
+					
+					sumExperience =  sumExperience + parseInt(myArray[i].rows[j][1]);
+					
+					sumPastIndex = sumPastIndex + parseInt(myArray[i].rows[j][2]);
+					
+					sumFutureIndex = sumFutureIndex + parseInt(myArray[i].rows[j][3]);
+					
+					sumExpectationIndex = sumExpectationIndex + parseInt(Math.pow(myArray[i].rows[j][0]-10,2));
+					
+					sumExperienceIndex = sumExperienceIndex + parseInt(Math.pow(myArray[i].rows[j][1]-1,2));
+					//alert(sumPastIndex);
+					newSumExpectationIndex = newSumExpectationIndex + parseInt(Math.pow(myArray[i].rows[j][0]-11,2));
+					
+					newSumExperienceIndex = newSumExperienceIndex + parseInt(Math.pow(myArray[i].rows[j][1],2));
+					
+					expectationList.push(myArray[i].rows[j][0]);
+					
+					experienceList.push(myArray[i].rows[j][1]);
+						
+				}
+				
+				
+				avgExpectation = sumExpectation/myArray.length;	
+				avgExperience = sumExperience/myArray.length;
+				
+				//alert(avgExpectation);
+				
+				importanceIndex = avgExpectation/10;
+				performanceIndex =avgExperience/10;
+				
+				//alert(importanceIndex);
+				
+				gapIndex = Math.abs((avgExperience - avgExpectation)/10-1);
+				newGapIndex = Math.pow(2,(avgExpectation-avgExperience)/10);
+				
+				pastIndex = Math.abs(sumPastIndex/myArray.length*0.9-1);
+				futureIndex = Math.abs(sumFutureIndex/myArray.length*0.9-1);
+				
+				newPastIndex = Math.pow(2,-sumPastIndex/myArray.length);
+				newFutureIndex = Math.pow(2,-sumFutureIndex/myArray.length);
+				
+				expectationIndex = Math.sqrt(sumExpectationIndex/myArray.length);
+				experienceIndex = Math.sqrt(sumExperienceIndex/myArray.length);
+				
+				newExpectationIndex = Math.sqrt(newSumExpectationIndex/myArray.length);
+				newExperienceIndex = Math.sqrt(newSumExperienceIndex/myArray.length);
+				
+			//	var data = new Array(EE, SA, EF);						 // calculate standard deviation for expectation
+				var deviation = new Array();
+				var sum = 0;
+				var devnsum = 0;
+				
+				var deviation2 = new Array();							// calculate standard deviation for experience
+				var sum2 = 0;
+				var devnsum2 = 0;
+	
+				var len = expectationList.length;
+				
+				for (var i=0; i<len; i++) 
+				{
+					sum = sum + (parseFloat(expectationList[i],10)); 					// ensure number to base 10
+					sum2 = sum2 + (parseFloat(experienceList[i],10)); 
+				}
+				var mean = (sum/len);						 
+				var mean2 = (sum2/len);
+				
+				for (i=0; i<len; i++) 
+				{
+					deviation[i] = expectationList[i] - mean;
+					deviation[i] = deviation[i] * deviation[i];
+					devnsum = devnsum + deviation[i];
+					
+					deviation2[i] = experienceList[i] - mean2;
+					deviation2[i] = deviation2[i] * deviation2[i];
+					devnsum2 = devnsum2 + deviation2[i];
+				
+				
+				}
+				
+				stdExpectation = Math.sqrt(devnsum/(len-1)); 								// Std of expectations and experiences
+				stdExperience = Math.sqrt(devnsum2/(len-1));
+				
+			//	alert(stdExpectation);
+			//	alert(stdExperience);
+				
+				
+				SDExpectation = stdExpectation/10+1;
+				SDExperience = stdExperience/10+1;
+			
+		//		alert(SDExpectation);
+		//		alert(SDExperience);
+				
+				cfiPast = stdExpectation*stdExperience/importanceIndex/gapIndex/pastIndex;			// value of each cfi_past
+				cfiFuture = stdExpectation*stdExperience/importanceIndex/gapIndex/futureIndex;
+				
+				bcfiPast = SDExpectation*SDExperience*performanceIndex/importanceIndex/gapIndex/pastIndex;
+				bcfiFuture = SDExpectation*SDExperience*performanceIndex/importanceIndex/gapIndex/futureIndex;
+				
+				scfiPast = expectationIndex*experienceIndex*performanceIndex/importanceIndex/gapIndex/pastIndex;
+				scfiFuture = expectationIndex*experienceIndex*performanceIndex/importanceIndex/gapIndex/futureIndex;
+				
+				newScfiPast = newExpectationIndex* newExperienceIndex*performanceIndex/importanceIndex/newGapIndex/newPastIndex;
+				newScfiFuture = newExpectationIndex* newExperienceIndex*performanceIndex/importanceIndex/newGapIndex/newFutureIndex;
+				
+				
+/* 				alert(scfiPast);
+				alert(scfiFuture);
+				alert(newScfiPast);
+				alert(newScfiFuture); */
+				
+				cfiPastList.push(cfiPast);															//push the outcomes into a array
+				cfiFutureList.push(cfiFuture);
+				
+				bcfiPastList.push(bcfiPast);
+				bcfiFutureList.push(bcfiFuture);
+				
+				scfiPastList.push(scfiPast);
+				scfiFutureList.push(scfiFuture);
+				
+				newScfiPastList.push(newScfiPast);
+				newScfiFutureList.push(newScfiFuture);
+				
+				
+		//		alert(cfiFutureList[j]);
+				
+				sumCfiPast = sumCfiPast + cfiPast;
+				sumCfiFuture = sumCfiFuture + cfiFuture;
+				
+				sumBcfiPast = sumBcfiPast + bcfiPast;
+				sumBcfiFuture = sumBcfiFuture + bcfiFuture;
+				
+				sumScfiPast = sumScfiPast + scfiPast;
+				sumScfiFuture = sumScfiFuture + scfiFuture;
+				
+				sumNewScfiPast = sumNewScfiPast + newScfiPast;
+				sumNewScfiFuture = sumNewScfiFuture + newScfiFuture;
+		//		alert(sumCfiFuture);
+			
+				sumExperienceIndex = 0;
+				sumExpectationIndex = 0;
+				sumFutureIndex = 0;		
+				sumPastIndex = 0;
+				sumExpectation = 0;
+				sumExperience = 0;
+			
+			
+			}
+		
+ 		for(var k=0; k < cfiPastList.length; k++)				// calculate the percentage
+		{ 
+				
+				 
+
+ 		//	alert(sumCfiFuture);
+			
+			cfiPastPercent[k] = cfiPastList[k] / sumCfiPast;			
+			cfiFuturePercent[k] = cfiFutureList[k]/sumCfiFuture;
+			
+			bcfiPastPercent[k] = bcfiPastList[k]/sumBcfiPast;
+			bcfiFuturePercent[k] = bcfiFutureList[k]/sumBcfiFuture;
+			
+			scfiPastPercent[k] = scfiPastList[k]/sumScfiPast;
+			scfiFuturePercent[k] = scfiFutureList[k]/sumScfiFuture;
+			
+			newScfiPastPercent[k] = newScfiPastList[k]/sumNewScfiPast;
+			newScfiFuturePercent[k] = newScfiFutureList[k]/sumNewScfiFuture;
+		//	alert(bcfiPastPercent[k]);
+		//	alert(cfiPastList[k]);
+		//	alert(cfiPastPercent);
+		
+/*  			document.getElementsByName('pcfi'+(k+1))[0].value= cfiPastPercent[k].toFixed(5);  				//put the result to the html
+			document.getElementsByName('fcfi'+(k+1))[0].value= cfiFuturePercent[k].toFixed(5);
+		
+			document.getElementsByName('pbcfi'+(k+1))[0].value= bcfiPastPercent[k].toFixed(5);
+			document.getElementsByName('fbcfi'+(k+1))[0].value= bcfiFuturePercent[k].toFixed(5);
+			
+			document.getElementsByName('p'+(k+1))[0].value= scfiPastPercent[k].toFixed(5);
+			document.getElementsByName('f'+(k+1))[0].value= scfiFuturePercent[k].toFixed(5);
+			
+			document.getElementsByName('np'+(k+1))[0].value= newScfiPastPercent[k].toFixed(5);
+			document.getElementsByName('nf'+(k+1))[0].value= newScfiFuturePercent[k].toFixed(5);  */
+		}  
+	
+	//-------------------------------------------------------------------------------------------------------- create dynamic table for result
+ 		
+ 		
+ 		
+ 		 	var myTableDiv = document.getElementById("myDynamicResult");				
+	     
+			var table = document.createElement('TABLE');
+			table.border='1';
+			table.id='dynaResult';
+			 	 
+	
+		 
+		 var tableCaption = document.createElement('CAPTION');
+		 tableCaption.appendChild(document.createTextNode("Final Result"));
+		 table.appendChild(tableCaption);
+		 
+		 var tableHead = document.createElement('THEAD');
+		 table.appendChild(tableHead);
+		 var tr = document.createElement('TR');
+		 tableHead.appendChild(tr);
+		 
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Attributes"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Past-CFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Future-CFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Past-BCFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Future-BCFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Past-SCFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Future-SCFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Past-NSCFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     var th = document.createElement('TH');
+	     var bold = document.createElement('B');
+	     bold.appendChild(document.createTextNode("Future-NSCFI"));
+	     th.appendChild(bold);
+	     tr.appendChild(th);
+	     
+		 var tableBody = document.createElement('TBODY');
+		 table.appendChild(tableBody);
+		 
+		 for (var i=0; i<21; i++)
+		 {
+		       var tr = document.createElement('TR');
+		       tableBody.appendChild(tr);
+		       
+		       var td = document.createElement('TD');	   
+		  	   var bold = document.createElement('B');
+
+		  	   var attributename=document.getElementById("Attribute3"+(i+1)+"id");	
+
+		  	   bold.appendChild(document.createTextNode(attributename.value));
+		  	   td.appendChild(bold);
+		       tr.appendChild(td);
+		       
+		       var td = document.createElement('TD');
+		  	   td.appendChild(document.createTextNode(cfiPastPercent[i].toFixed(5)));
+		       tr.appendChild(td);
+		       var td = document.createElement('TD');
+		  	   td.appendChild(document.createTextNode(cfiFuturePercent[i].toFixed(5)));
+		       tr.appendChild(td);
+		       
+		       var td = document.createElement('TD');       												/////////////////////////////////////////
+		  	   td.appendChild(document.createTextNode(bcfiPastPercent[i].toFixed(5)));
+			   tr.appendChild(td);
+		  	   
+		       var td = document.createElement('TD');
+		  	   td.appendChild(document.createTextNode(bcfiFuturePercent[i].toFixed(5)));
+		  	   tr.appendChild(td);
+		      
+		       var td = document.createElement('TD');
+		  	   td.appendChild(document.createTextNode(scfiPastPercent[i].toFixed(5)));
+		  	   tr.appendChild(td);
+		      
+		       var td = document.createElement('TD');
+		  	   td.appendChild(document.createTextNode(scfiFuturePercent[i].toFixed(5)));
+		  	   tr.appendChild(td);
+		      
+		       var td = document.createElement('TD');
+		  	   td.appendChild(document.createTextNode(newScfiPastPercent[i].toFixed(5)));
+		  	   tr.appendChild(td);
+		      
+		       var td = document.createElement('TD');
+		  	   td.appendChild(document.createTextNode(newScfiFuturePercent[i].toFixed(5)));
+		  	   tr.appendChild(td);   
+		  	   
+  
+		  	   tr.appendChild(td);
+	 		
+	 		}
+			   myTableDiv.appendChild(table);
+	}
+//----------------------------------------------------------------------------------------------------
+	 
+			
+$(document).ready(function() {
+    $("#excelExport").click(function(e) {
+
+        //getting values of current time for generating the file name
+        var dt = new Date();
+        var day = dt.getDate();
+        var month = dt.getMonth() + 1;
+        var year = dt.getFullYear();
+        var hour = dt.getHours();
+        var mins = dt.getMinutes();
+        var postfix = day + "." + month + "." + year + "_" + hour + ":" + mins;
+        //creating a temporary HTML link element (they support setting file names)
+        var a = document.createElement('a');
+        //getting data from our div that contains the HTML table
+        var data_type = 'data:application/vnd.ms-excel';
+        
+  	    var table_div = document.getElementById('myDynamicResult');
+		var table_html = table_div.outerHTML.replace(/ /g, '%20');
+		
+        a.href = data_type + ', ';
+        a.href = a.href + table_html;
+        
+        
+    /* 	    var table_div = document.getElementById('surfacePlotDiv2');
+		var table_html = table_div.outerHTML.replace(/ /g, '%20');	
+        a.href = a.href + table_html ;  */
+        
+ //       a.href = data_type + ', ';
+        var table_div = 0;
+        var table_html = 0;
+ 	    for(var i=1; i<=myArray.length; i++)
+	    {
+ 		    table_div = document.getElementById('dyna'+ i);
+ 			table_html = table_div.outerHTML.replace(/ /g, '%20');	
+		   	a.href = a.href + table_html ;
+	            
+	    }  
+
+        //setting the file name
+        a.download = 'Senor1_' + postfix + '.xls';
+  
+        
+        //triggering the function
+        a.click();
+        //just in case, prevent default behaviour
+        e.preventDefault();
+        return a;
+    });
+});
+
+
+//----------------------------------------------------------------------------------------------------
+	/*
+	var pastScfiVector = new Array();
+	var futureScfiVector = new Array();
+		
+	
+	var a;
+	var b;
+	var c;
+	var d;
+	
+	var pastScfi = 0;
+	var futureScfi = 0;
+	
+	
+ 	for (var i = 0; i < 21 ; i++)
+	{
+		//a = new Number(document.getElementsByName(sensorData.rows[i][0]).value);
+		a = new Number(document.getElementsByName(sensorData.rows[i][0])[0].value);
+		b = new Number(document.getElementsByName(sensorData.rows[i][1])[0].value);
+		var radios = document.getElementsByName(sensorData.rows[i][2]);
+		for (var j = 0, length = radios.length; j < length; j++) {
+		    if (radios[j].checked) {
+		        c = new Number(radios[j].value);
+		    }
+		}
+		var radios = document.getElementsByName(sensorData.rows[i][3]);
+		for (var j = 0, length = radios.length; j < length; j++) {
+		    if (radios[j].checked) {
+		        d = new Number(radios[j].value);
+		    }
+		}
+		
+//		alert(a);
+//		alert(b);
+//		alert(c);
+//		alert(d);
+
+		pastScfi = Math.sqrt(Math.pow(b-1,2))*Math.sqrt(Math.pow(a-10,2))*b/((a*Math.abs((b-a)/10-1))*c);
+		//alert(pastScfi);
+	    futureScfi = Math.sqrt(Math.pow(b-1,2))*Math.sqrt(Math.pow(a-10,2))*b/((a*Math.abs((b-a)/10-1))*d);
+//		alert(futureScfi);
+		
+		pastScfiVector.push(pastScfi);
+		futureScfiVector.push(futureScfi);
+
+	} */
+	
+//-------------------------------------------------------------------- result of each element
+	
+	/* var sumNumber = sum(pastScfiVector);
+	
+	//alert(sumNumber);
+	
+	for(var i = 0; i < pastScfiVector.length ; i++)
+		{
+		pastScfiVector[i] /=sumNumber;
+
+		document.getElementsByName('p'+(i+1))[0].value= pastScfiVector[i].toFixed(5);
+//		alert(i+1);
+		}
+	//alert(pastScfiVector);
+
+	
+	var sumNumber2 = sum(futureScfiVector);
+	
+//	alert(sumNumber2);
+	for(var i = 0; i < futureScfiVector.length ; i++)
+		{
+		futureScfiVector[i] /=sumNumber2;
+		document.getElementsByName('f'+(i+1))[0].value= futureScfiVector[i].toFixed(5);
+		}
+//	alert(futureScfiVector);
+
+*/
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------- Test
+
+var grid = $('#datagrid');  
+//var options = grid.datagrid('getPager').data("pagination").options;  
+//var curr = options.pageNumber;  
+//var total = options.total;  
+//var max = Math.ceil(total/options.pageSize);  
+
+
+
+
+
+
+//----------------------------------------------------------
+
+function loadContent()														// Jqury to define the HTML
+{
+//	$("input").attr('required','required');
+	$(".NumberInput").attr('onkeypress',"return seqOnClick(event);");
+	$(".CustText").attr('onkeydown',"return changeInputlength(this);");
+	$("input[type=radio]").attr("class","RadioInput");
+
+//	$("table").attr("class","striped");
+//	$("table").attr("class","table2");
+//	$("input").attr("value","1");
+//	$("input").attr("checked","true");
+
+}
+
+
+
+</script>
+
+
+
+
+<body onload="loadContent();">
+<form name="companyName" method="post" action="SR" class="margin">
+		
+		<table>
+		<tr>
+		<th><i>The List of Questionnaires</i></th>
+		</tr>
+		<tr>
+		<td><a href='index.html'><b>1, MSI and TLI</b></a></td>
+		</tr>
+		<tr>
+		<td><b>2, Sensor and Response Form</b>
+				<ul>
+		  			<li><b>Form #1</b></li>
+		  			<li><a href='sensor2.html'><b>Form #2</b></a></li>
+		  		</ul>
+		</td>
+		</tr>
+		</table>
+
+		
+<!-- 		<h2><i>The List of Questionnaires</i></h2>
+		<ol>
+		  <li><h2><a href='http://app.cc.puv.fi/e0900766_questionnaire2/index.html'><b>MSI and TLI</b></a></h2></li>
+		  <li><h2>Sensor and Response</h2>
+		  		<ul>
+		  			<li><h2>Form #1</h2></li>
+		  			<li><h2>Form #2</h2></li>
+		  		</ul>
+		  </li>
+		  
+		</ol>
+
+		</br> -->
+		</br>
+		
+		<h2><input class="CustText" id="text1" name="Name1" size="30" style="font-weight:bold" value="Sense and Respond Questionnaire" /></h2>
+		
+
+
+		<table>
+			<tr>
+				<td><input class="CustText" id="text2" name="Name1" value="Company Name"/></td>
+				<td><input type="text" name="CompanyName"></td>
+			</tr>
+		</table>
+		
+</form>
+
+<form name="sensor" method="post" action="SR" class="margin">
+
+
+
+
+
+<div id="myDynamicTable">
+
+
+</div>
+
+
+
+
+
+<h2>You are the Inquirer No. <b><span id="count">1</span></b></h2><a href="#dynaResult"><input class="right2" type="button" size="12" value="Calculate Submitted Data" onclick = "allValues();"></a>
+
+		<table id="seqTable" class="table2 striped">
+			<tr>
+				<th><input class="CustText" id="Attributeid" style="font-weight:bold" value="Attributes" /></th>
+				<th><input class="CustText" id="Expectationid" size="10" style="font-weight:bold" value="Expectation"  /></th>
+				<th><input class="CustText" id="Experienceid" size="10" style="font-weight:bold" value="Experience"  /></th>
+				<th><input class="CustText" id="PastDevelopmentid" style="font-weight:bold" value="Past Development"  /></th>
+				<th><input class="CustText" id="FutureDevelopmentid" style="font-weight:bold" value="Future Development"  /></th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>(1-10)</td>
+				<td>(1-10)</td>
+				<td>(Worse/ Same/ Better)</td>
+				<td>(Worse/ Same/ Better)</td>
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute1id" name="Attribute1name" size="50" style="font-weight:bold" value="Knowledge and Technology Management"/></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td><input class="CustText" id="Attribute31id" name="Attribute31name" size="50" value="3.1, Training and development of the company's personnel"/></td>
+				<td><input class="NumberInput" type="text" size="3" name="et1"></td>
+				<td><input class="NumberInput" type="text" size="3" name="ep1"></td>
+				<td><input type="radio" name="pi1" value="-1" />Worse<input type="radio" name="pi1" value="0" />Same<input type="radio" name="pi1" value="1" />Better</td>
+				<td><input type="radio" name="fi1" value="-1" />Worse<input type="radio" name="fi1" value="0" />Same<input type="radio" name="fi1" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p1" readonly></td> -->
+<!-- 				<td><input type="text" size="6" name="f1" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute32id" size="50" value="3.2, Innovativeness and performence of research and development"/></td>
+				<td><input class="NumberInput" type="text" size="3" name="et2"></td>
+				<td><input class="NumberInput" type="text" size="3" name="ep2"></td>
+				<td><input type="radio" name="pi2" value="-1" />Worse<input type="radio" name="pi2" value="0" />Same<input type="radio" name="pi2" value="1" />Better</td>
+				<td><input type="radio" name="fi2" value="-1" />Worse<input type="radio" name="fi2" value="0" />Same<input type="radio" name="fi2" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p2" readonly></td>
+				<td><input type="text" size="6" name="f2" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute33id" size="50" value="3.3, Communication between different department and hierarchy levels"/></td>
+				<td><input class="NumberInput" type="text" size="3" name="et3"></td>
+				<td><input class="NumberInput" type="text" size="3" name="ep3"></td>
+				<td><input type="radio" name="pi3" value="-1" />Worse<input type="radio" name="pi3" value="0" />Same<input type="radio" name="pi3" value="1" />Better</td>
+				<td><input type="radio" name="fi3" value="-1" />Worse<input type="radio" name="fi3" value="0" />Same<input type="radio" name="fi3" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p3" readonly></td>
+				<td><input type="text" size="6" name="f3" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute34id" size="50" value="3.4, Adaptation to knowledge and technology"/></td>
+				<td><input class="NumberInput" type="text" size="3" name="et4"></td>
+				<td><input class="NumberInput" type="text" size="3" name="ep4"></td>
+				<td><input type="radio" name="pi4" value="-1" />Worse<input type="radio" name="pi4" value="0" />Same<input type="radio" name="pi4" value="1" />Better</td>
+				<td><input type="radio" name="fi4" value="-1" />Worse<input type="radio" name="fi4" value="0" />Same<input type="radio" name="fi4" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p4" readonly></td>
+				<td><input type="text" size="6" name="f4" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute35id" size="50" value="3.5, Knowledge and technology diffusion"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et5"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep5"></td>
+				<td><input type="radio" name="pi5" value="-1" />Worse<input type="radio" name="pi5" value="0" />Same<input type="radio" name="pi5" value="1" />Better</td>
+				<td><input type="radio" name="fi5" value="-1" />Worse<input type="radio" name="fi5" value="0" />Same<input type="radio" name="fi5" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p5" readonly></td>
+				<td><input type="text" size="6" name="f5" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute36id" size="50" value="3.6, Design and planning of the processes and products"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et6"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep6"></td>
+				<td><input type="radio" name="pi6" value="-1" />Worse<input type="radio" name="pi6" value="0" />Same<input type="radio" name="pi6" value="1" />Better</td>
+				<td><input type="radio" name="fi6" value="-1" />Worse<input type="radio" name="fi6" value="0" />Same<input type="radio" name="fi6" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p6" readonly></td>
+				<td><input type="text" size="6" name="f6" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" size="50" style="font-weight:bold" value="Processes and Work Flows"/></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+<!-- 				<td></td>
+				<td></td> -->
+			</tr>
+			<tr></tr>
+			<tr>
+				<td><input class="CustText" id="Attribute37id" size="50" value="3.7, Short and promt lead-times in order-fulfilment process"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et7"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep7"></td>
+				<td><input type="radio" name="pi7" value="-1" />Worse<input type="radio" name="pi7" value="0" />Same<input type="radio" name="pi7" value="1" />Better</td>
+				<td><input type="radio" name="fi7" value="-1" />Worse<input type="radio" name="fi7" value="0" />Same<input type="radio" name="fi7" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p7" readonly></td>
+				<td><input type="text" size="6" name="f7" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute38id" size="50" value="3.8, Reduction of unprofiable time in processes"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et8"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep8"></td>
+				<td><input type="radio" name="pi8" value="-1" />Worse<input type="radio" name="pi8" value="0" />Same<input type="radio" name="pi8" value="1" />Better</td>
+				<td><input type="radio" name="fi8" value="-1" />Worse<input type="radio" name="fi8" value="0" />Same<input type="radio" name="fi8" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p8" readonly></td>
+				<td><input type="text" size="6" name="f8" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute39id" size="50" value="3.9, On-time deliveries to customer"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et9"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep9"></td>
+				<td><input type="radio" name="pi9" value="-1" />Worse<input type="radio" name="pi9" value="0" />Same<input type="radio" name="pi9" value="1" />Better</td>
+				<td><input type="radio" name="fi9" value="-1" />Worse<input type="radio" name="fi9" value="0" />Same<input type="radio" name="fi9" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p9" readonly></td>
+				<td><input type="text" size="6" name="f9" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute310id" size="50" value="3.10, Control and optimization of all types of inventories"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et10"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep10"></td>
+				<td><input type="radio" name="pi10" value="-1" />Worse<input type="radio" name="pi10" value="0" />Same<input type="radio" name="pi10" value="1" />Better</td>
+				<td><input type="radio" name="fi10" value="-1" />Worse<input type="radio" name="fi10" value="0" />Same<input type="radio" name="fi10" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p10" readonly></td>
+				<td><input type="text" size="6" name="f10" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute311id" size="50" value="3.11, Adaptiveness of changes in demands and in order backlog"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et11"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep11"></td>
+				<td><input type="radio" name="pi11" value="-1" />Worse<input type="radio" name="pi11" value="0" />Same<input type="radio" name="pi11" value="1" />Better</td>
+				<td><input type="radio" name="fi11" value="-1" />Worse<input type="radio" name="fi11" value="0" />Same<input type="radio" name="fi11" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p11" readonly></td>
+				<td><input type="text" size="6" name="f11" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" size="50" style="font-weight:bold" value="Organizational Systems"/></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+<!-- 				<td></td>
+				<td></td> -->
+			</tr>
+			<tr></tr>
+			<tr>
+				<td><input class="CustText" id="Attribute312id" size="50" value="3.12, Leadership and management system of the company"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et12"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep12"></td>
+				<td><input type="radio" name="pi12" value="-1" />Worse<input type="radio" name="pi12" value="0" />Same<input type="radio" name="pi12" value="1" />Better</td>
+				<td><input type="radio" name="fi12" value="-1" />Worse<input type="radio" name="fi12" value="0" />Same<input type="radio" name="fi12" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p12" readonly></td>
+				<td><input type="text" size="6" name="f12" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute313id" size="50" value="3.13, Quality control of products, processes and operations"/></td>
+				<td><input class="NumberInput" type="text" size="3" name="et13"></td>
+				<td><input class="NumberInput" type="text" size="3" name="ep13"></td>
+				<td><input type="radio" name="pi13" value="-1" />Worse<input type="radio" name="pi13" value="0" />Same<input type="radio" name="pi13" value="1" />Better</td>
+				<td><input type="radio" name="fi13" value="-1" />Worse<input type="radio" name="fi13" value="0" />Same<input type="radio" name="fi13" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p13" readonly></td>
+				<td><input type="text" size="6" name="f13" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute314id" size="50" value="3.14, Well defined responsibilities and tasks for each position"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et14"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep14"></td>
+				<td><input type="radio" name="pi14" value="-1" />Worse<input type="radio" name="pi14" value="0" />Same<input type="radio" name="pi14" value="1" />Better</td>
+				<td><input type="radio" name="fi14" value="-1" />Worse<input type="radio" name="fi14" value="0" />Same<input type="radio" name="fi14" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p14" readonly></td>
+				<td><input type="text" size="6" name="f14" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute315id" size="50" value="3.15, Utilizing different types of organizing systems (projects, teams...)"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et15"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep15"></td>
+				<td><input type="radio" name="pi15" value="-1" />Worse<input type="radio" name="pi15" value="0" />Same<input type="radio" name="pi15" value="1" />Better</td>
+				<td><input type="radio" name="fi15" value="-1" />Worse<input type="radio" name="fi15" value="0" />Same<input type="radio" name="fi15" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p15" readonly></td>
+				<td><input type="text" size="6" name="f15" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute316id" size="50" value="3.16, Code of conduct and security of data and information"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et16"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep16"></td>
+				<td><input type="radio" name="pi16" value="-1" />Worse<input type="radio" name="pi16" value="0" />Same<input type="radio" name="pi16" value="1" />Better</td>
+				<td><input type="radio" name="fi16" value="-1" />Worse<input type="radio" name="fi16" value="0" />Same<input type="radio" name="fi16" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p16" readonly></td>
+				<td><input type="text" size="6" name="f16" readonly></td> -->
+			</tr>
+
+			<tr>
+				<td><input class="CustText" size="50" style="font-weight:bold" value="Information Systems"/></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+<!-- 				<td></td>
+				<td></td> -->
+			</tr>
+			<tr></tr>
+
+			<tr>
+				<td><input class="CustText" id="Attribute317id" size="50" value="3.17, Information systems support the business processes"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et17"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep17"></td>
+				<td><input type="radio" name="pi17" value="-1" />Worse<input type="radio" name="pi17" value="0" />Same<input type="radio" name="pi17" value="1" />Better</td>
+				<td><input type="radio" name="fi17" value="-1" />Worse<input type="radio" name="fi17" value="0" />Same<input type="radio" name="fi17" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p17" readonly></td>
+				<td><input type="text" size="6" name="f17" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute318id" size="50" value="3.18, Visibility of information in information system"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et18"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep18"></td>
+				<td><input type="radio" name="pi18" value="-1" />Worse<input type="radio" name="pi18" value="0" />Same<input type="radio" name="pi18" value="1" />Better</td>
+				<td><input type="radio" name="fi18" value="-1" />Worse<input type="radio" name="fi18" value="0" />Same<input type="radio" name="fi18" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p18" readonly></td>
+				<td><input type="text" size="6" name="f18" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute319id" size="50" value="3.19, Availability of information in information systems"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et19"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep19"></td>
+				<td><input type="radio" name="pi19" value="-1" />Worse<input type="radio" name="pi19" value="0" />Same<input type="radio" name="pi19" value="1" />Better</td>
+				<td><input type="radio" name="fi19" value="-1" />Worse<input type="radio" name="fi19" value="0" />Same<input type="radio" name="fi19" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p19" readonly></td>
+				<td><input type="text" size="6" name="f19" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute320id" size="50" value="3.20, Quality and reliability of information in information systems"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et20"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep20"></td>
+				<td><input type="radio" name="pi20" value="-1" />Worse<input type="radio" name="pi20" value="0" />Same<input type="radio" name="pi20" value="1" />Better</td>
+				<td><input type="radio" name="fi20" value="-1" />Worse<input type="radio" name="fi20" value="0" />Same<input type="radio" name="fi20" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p20" readonly></td>
+				<td><input type="text" size="6" name="f20" readonly></td> -->
+			</tr>
+			<tr>
+				<td><input class="CustText" id="Attribute321id" size="50" value="3.21, Usability and functionality of information systems"/></td>
+				<td><input class="NumberInput"  type="text" size="3" name="et21"></td>
+				<td><input class="NumberInput"  type="text" size="3" name="ep21"></td>
+				<td><input type="radio" name="pi21" value="-1" />Worse<input type="radio" name="pi21" value="0" />Same<input type="radio" name="pi21" value="1" />Better</td>
+				<td><input type="radio" name="fi21" value="-1" />Worse<input type="radio" name="fi21" value="0" />Same<input type="radio" name="fi21" value="1" />Better</td>
+<!-- 				<td><input type="text" size="6" name="p21" readonly></td>
+				<td><input type="text" size="6" name="f21" readonly></td> -->
+			</tr>
+	
+		</table>
+
+	<a href="#count"><input class="left" type="button" size="12" value="Submit Data & Start Over" onclick = "nextPerson();"></a>
+	<a href="#count"><input class="right" type="button" size="10" value="Delete Previous" onclick = "dele();"></a>
+
+</form>
+
+		<br />
+
+
+
+<form method="post" action="SR" class="margin">
+
+		<!-- <table class="striped" id="result">
+		<tr>
+			<th><i>Attributes</i></th>
+			<th>Past-CFI</th>
+			<th>Future-CFI</th>
+			<th>Past-BCFI</th>
+			<th>Future-BCFI</th>
+			<th>Past-SCFI</th>
+			<th>Future-SCFI</th>
+			<th>Past-NSCFI</th>
+			<th>Future-NSCFI</th>
+		</tr>
+		<tr>
+				<td></td>
+				<td>%</td>
+				<td>%</td>
+				<td>%</td>
+				<td>%</td>
+				<td>%</td>
+				<td>%</td>
+				<td>%</td>
+				<td>%</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td><input type="text" size="10" name="pcfi1" readonly></td>
+			<td><input type="text" size="10" name="fcfi1" readonly></td>
+			<td><input type="text" size="10" name="pbcfi1" readonly></td>
+			<td><input type="text" size="10" name="fbcfi1" readonly></td>
+			<td><input type="text" size="10" name="p1" readonly></td>
+			<td><input type="text" size="10" name="f1" readonly></td>
+			<td><input type="text" size="10" name="np1" readonly></td>
+			<td><input type="text" size="10" name="nf1" readonly></td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td><input type="text" size="10" name="pcfi2" readonly></td>
+			<td><input type="text" size="10" name="fcfi2" readonly></td>
+			<td><input type="text" size="10" name="pbcfi2" readonly></td>
+			<td><input type="text" size="10" name="fbcfi2" readonly></td>
+			<td><input type="text" size="10" name="p2" readonly></td>
+			<td><input type="text" size="10" name="f2" readonly></td>
+			<td><input type="text" size="10" name="np2" readonly></td>
+			<td><input type="text" size="10" name="nf2" readonly></td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td><input type="text" size="10" name="pcfi3" readonly></td>
+			<td><input type="text" size="10" name="fcfi3" readonly></td>
+			<td><input type="text" size="10" name="pbcfi3" readonly></td>
+			<td><input type="text" size="10" name="fbcfi3" readonly></td>
+			<td><input type="text" size="10" name="p3" readonly></td>
+			<td><input type="text" size="10" name="f3" readonly></td>
+			<td><input type="text" size="10" name="np3" readonly></td>
+			<td><input type="text" size="10" name="nf3" readonly></td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td><input type="text" size="10" name="pcfi4" readonly></td>
+			<td><input type="text" size="10" name="fcfi4" readonly></td>
+			<td><input type="text" size="10" name="pbcfi4" readonly></td>
+			<td><input type="text" size="10" name="fbcfi4" readonly></td>
+			<td><input type="text" size="10" name="p4" readonly></td>
+			<td><input type="text" size="10" name="f4" readonly></td>
+			<td><input type="text" size="10" name="np4" readonly></td>
+			<td><input type="text" size="10" name="nf4" readonly></td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td><input type="text" size="10" name="pcfi5" readonly></td>
+			<td><input type="text" size="10" name="fcfi5" readonly></td>
+			<td><input type="text" size="10" name="pbcfi5" readonly></td>
+			<td><input type="text" size="10" name="fbcfi5" readonly></td>
+			<td><input type="text" size="10" name="p5" readonly></td>
+			<td><input type="text" size="10" name="f5" readonly></td>
+			<td><input type="text" size="10" name="np5" readonly></td>
+			<td><input type="text" size="10" name="nf5" readonly></td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td><input type="text" size="10" name="pcfi6" readonly></td>
+			<td><input type="text" size="10" name="fcfi6" readonly></td>
+			<td><input type="text" size="10" name="pbcfi6" readonly></td>
+			<td><input type="text" size="10" name="fbcfi6" readonly></td>
+			<td><input type="text" size="10" name="p6" readonly></td>
+			<td><input type="text" size="10" name="f6" readonly></td>
+			<td><input type="text" size="10" name="np6" readonly></td>
+			<td><input type="text" size="10" name="nf6" readonly></td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td><input type="text" size="10" name="pcfi7" readonly></td>
+			<td><input type="text" size="10" name="fcfi7" readonly></td>
+			<td><input type="text" size="10" name="pbcfi7" readonly></td>
+			<td><input type="text" size="10" name="fbcfi7" readonly></td>
+			<td><input type="text" size="10" name="p7" readonly></td>
+			<td><input type="text" size="10" name="f7" readonly></td>
+			<td><input type="text" size="10" name="np7" readonly></td>
+			<td><input type="text" size="10" name="nf7" readonly></td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td><input type="text" size="10" name="pcfi8" readonly></td>
+			<td><input type="text" size="10" name="fcfi8" readonly></td>
+			<td><input type="text" size="10" name="pbcfi8" readonly></td>
+			<td><input type="text" size="10" name="fbcfi8" readonly></td>
+			<td><input type="text" size="10" name="p8" readonly></td>
+			<td><input type="text" size="10" name="f8" readonly></td>
+			<td><input type="text" size="10" name="np8" readonly></td>
+			<td><input type="text" size="10" name="nf8" readonly></td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td><input type="text" size="10" name="pcfi9" readonly></td>
+			<td><input type="text" size="10" name="fcfi9" readonly></td>
+			<td><input type="text" size="10" name="pbcfi9" readonly></td>
+			<td><input type="text" size="10" name="fbcfi9" readonly></td>
+			<td><input type="text" size="10" name="p9" readonly></td>
+			<td><input type="text" size="10" name="f9" readonly></td>
+			<td><input type="text" size="10" name="np9" readonly></td>
+			<td><input type="text" size="10" name="nf9" readonly></td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td><input type="text" size="10" name="pcfi10" readonly></td>
+			<td><input type="text" size="10" name="fcfi10" readonly></td>
+			<td><input type="text" size="10" name="pbcfi10" readonly></td>
+			<td><input type="text" size="10" name="fbcfi10" readonly></td>
+			<td><input type="text" size="10" name="p10" readonly></td>
+			<td><input type="text" size="10" name="f10" readonly></td>
+			<td><input type="text" size="10" name="np10" readonly></td>
+			<td><input type="text" size="10" name="nf10" readonly></td>
+		</tr>
+		<tr>
+			<td>11</td>
+			<td><input type="text" size="10" name="pcfi11" readonly></td>
+			<td><input type="text" size="10" name="fcfi11" readonly></td>
+			<td><input type="text" size="10" name="pbcfi11" readonly></td>
+			<td><input type="text" size="10" name="fbcfi11" readonly></td>
+			<td><input type="text" size="10" name="p11" readonly></td>
+			<td><input type="text" size="10" name="f11" readonly></td>
+			<td><input type="text" size="10" name="np11" readonly></td>
+			<td><input type="text" size="10" name="nf11" readonly></td>
+		</tr>
+		<tr>
+			<td>12</td>
+			<td><input type="text" size="10" name="pcfi12" readonly></td>
+			<td><input type="text" size="10" name="fcfi12" readonly></td>
+			<td><input type="text" size="10" name="pbcfi12" readonly></td>
+			<td><input type="text" size="10" name="fbcfi12" readonly></td>
+			<td><input type="text" size="10" name="p12" readonly></td>
+			<td><input type="text" size="10" name="f12" readonly></td>
+			<td><input type="text" size="10" name="np12" readonly></td>
+			<td><input type="text" size="10" name="nf12" readonly></td>
+		</tr>
+		<tr>
+			<td>13</td>
+			<td><input type="text" size="10" name="pcfi13" readonly></td>
+			<td><input type="text" size="10" name="fcfi13" readonly></td>
+			<td><input type="text" size="10" name="pbcfi13" readonly></td>
+			<td><input type="text" size="10" name="fbcfi13" readonly></td>
+			<td><input type="text" size="10" name="p13" readonly></td>
+			<td><input type="text" size="10" name="f13" readonly></td>
+			<td><input type="text" size="10" name="np13" readonly></td>
+			<td><input type="text" size="10" name="nf13" readonly></td>
+		</tr>
+		<tr>
+			<td>14</td>
+			<td><input type="text" size="10" name="pcfi14" readonly></td>
+			<td><input type="text" size="10" name="fcfi14" readonly></td>
+			<td><input type="text" size="10" name="pbcfi14" readonly></td>
+			<td><input type="text" size="10" name="fbcfi14" readonly></td>
+			<td><input type="text" size="10" name="p14" readonly></td>
+			<td><input type="text" size="10" name="f14" readonly></td>
+			<td><input type="text" size="10" name="np14" readonly></td>
+			<td><input type="text" size="10" name="nf14" readonly></td>
+		</tr>
+		<tr>
+			<td>15</td>
+			<td><input type="text" size="10" name="pcfi15" readonly></td>
+			<td><input type="text" size="10" name="fcfi15" readonly></td>
+			<td><input type="text" size="10" name="pbcfi15" readonly></td>
+			<td><input type="text" size="10" name="fbcfi15" readonly></td>
+			<td><input type="text" size="10" name="p15" readonly></td>
+			<td><input type="text" size="10" name="f15" readonly></td>
+			<td><input type="text" size="10" name="np15" readonly></td>
+			<td><input type="text" size="10" name="nf15" readonly></td>
+		</tr>
+		<tr>
+			<td>16</td>
+			<td><input type="text" size="10" name="pcfi16" readonly></td>
+			<td><input type="text" size="10" name="fcfi16" readonly></td>
+			<td><input type="text" size="10" name="pbcfi16" readonly></td>
+			<td><input type="text" size="10" name="fbcfi16" readonly></td>
+			<td><input type="text" size="10" name="p16" readonly></td>
+			<td><input type="text" size="10" name="f16" readonly></td>
+			<td><input type="text" size="10" name="np16" readonly></td>
+			<td><input type="text" size="10" name="nf16" readonly></td>
+		</tr>
+		<tr>
+			<td>17</td>
+			<td><input type="text" size="10" name="pcfi17" readonly></td>
+			<td><input type="text" size="10" name="fcfi17" readonly></td>
+			<td><input type="text" size="10" name="pbcfi17" readonly></td>
+			<td><input type="text" size="10" name="fbcfi17" readonly></td>
+			<td><input type="text" size="10" name="p17" readonly></td>
+			<td><input type="text" size="10" name="f17" readonly></td>
+			<td><input type="text" size="10" name="np17" readonly></td>
+			<td><input type="text" size="10" name="nf17" readonly></td>
+		</tr>
+		<tr>
+			<td>18</td>
+			<td><input type="text" size="10" name="pcfi18" readonly></td>
+			<td><input type="text" size="10" name="fcfi18" readonly></td>
+			<td><input type="text" size="10" name="pbcfi18" readonly></td>
+			<td><input type="text" size="10" name="fbcfi18" readonly></td>
+			<td><input type="text" size="10" name="p18" readonly></td>
+			<td><input type="text" size="10" name="f18" readonly></td>
+			<td><input type="text" size="10" name="np18" readonly></td>
+			<td><input type="text" size="10" name="nf18" readonly></td>
+		</tr>
+		<tr>
+			<td>19</td>
+			<td><input type="text" size="10" name="pcfi19" readonly></td>
+			<td><input type="text" size="10" name="fcfi19" readonly></td>
+			<td><input type="text" size="10" name="pbcfi19" readonly></td>
+			<td><input type="text" size="10" name="fbcfi19" readonly></td>
+			<td><input type="text" size="10" name="p19" readonly></td>
+			<td><input type="text" size="10" name="f19" readonly></td>
+			<td><input type="text" size="10" name="np19" readonly></td>
+			<td><input type="text" size="10" name="nf19" readonly></td>
+		</tr>
+		<tr>
+			<td>20</td>
+			<td><input type="text" size="10" name="pcfi20" readonly></td>
+			<td><input type="text" size="10" name="fcfi20" readonly></td>
+			<td><input type="text" size="10" name="pbcfi20" readonly></td>
+			<td><input type="text" size="10" name="fbcfi20" readonly></td>
+			<td><input type="text" size="10" name="p20" readonly></td>
+			<td><input type="text" size="10" name="f20" readonly></td>
+			<td><input type="text" size="10" name="np20" readonly></td>
+			<td><input type="text" size="10" name="nf20" readonly></td>
+		</tr>
+		<tr>
+			<td>21</td>
+			<td><input type="text" size="10" name="pcfi21" readonly></td>
+			<td><input type="text" size="10" name="fcfi21" readonly></td>
+			<td><input type="text" size="10" name="pbcfi21" readonly></td>
+			<td><input type="text" size="10" name="fbcfi21" readonly></td>
+			<td><input type="text" size="10" name="p21" readonly></td>
+			<td><input type="text" size="10" name="f21" readonly></td>
+			<td><input type="text" size="10" name="np21" readonly></td>
+			<td><input type="text" size="10" name="nf21" readonly></td>
+		</tr>
+		</table> -->
+
+<div id="myDynamicResult">
+
+
+</div>
+
+
+			<table>
+				<input type="button" id="excelExport" class="left" size="10" value="Export Excel">				
+		</table>
+	</form>
+
+
+	<form id="sendemail" action="sendemail.php" method="POST" enctype="multipart/form-data" class="margin">
+	<p><input class="CustText" type="text" id="filename" name="filename" size="60" value="Sense and Respond For Operations Strategy Questionnaire Result Form1" readonly/></p>
+	E-mail: <input type="text" id="email" name="email"/>
+	ResultFile: <input type="file" id="resultfile" name="resultfile"/> 	
+	<input type="button" class="left" size="10" value="Email the Excel" onclick="sendemail('email','resultfile')"/>
+	</form>	
+
+</body>
+</html>
+		
