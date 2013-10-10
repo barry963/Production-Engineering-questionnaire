@@ -22,9 +22,12 @@ Future Improvement
 3. directly send the generated file, instead of choosing.
 
 
+Try to resolve the problem that users must choose the generated file. The key point is to find a way to pass a generated file or file variable to the php. But until now I havenot solved that. So the alternative choice might be that directly pass the raw data to php and then generated an excel file.
+
 
 =====================================
 Newest version:
 http://www.cc.puv.fi/~e1100587/sca-1.0/
+
 
 
