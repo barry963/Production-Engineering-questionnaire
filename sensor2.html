@@ -28,17 +28,32 @@ function sendemail(emailadressid,file)
 	var filename=document.getElementById(file).value;
 	var form=document.getElementById('sendemail');
 
-	if((!emailadress)||(!filename))
+
+        var filerawdata = document.createElement('a');
+        //getting data from our div that contains the HTML table
+
+        var data_type = 'data:application/vnd.ms-excel';
+        		
+        filerawdata.href = data_type + ', ';     
+
+
+  	    var table_div = document.getElementById('myDynamicResult');//dynamic result		    
+        filerawdata.href = filerawdata.href+table_div.outerHTML; 
+  
+        var table_div = 0;
+        var table_html = 0;
+
+		table_div = document.getElementById('myDynamicTable');//dynamic result 
+        filerawdata.href = filerawdata.href + table_div.outerHTML;
+
+
+	document.getElementById("formData").value=filerawdata.href;
+
+	if(!emailadress)
 	{
-		alert("Somewhere empty...");
+		alert("Sorry, email address empty!");
 		return;
 	}
-	else
-		if(filename.substr(filename.length - _validFileExtensions.length, _validFileExtensions.length).toLowerCase() != _validFileExtensions.toLowerCase())
-		{
-				alert("Sorry, that is not the result file, it should be .xls extension");
-				return;
-		}
 	else
 	{
 		var r=confirm("Are you sure to send the email and LEAVE this page?");
@@ -1994,8 +2009,8 @@ function loadContent()														// Jqury to define the HTML
 	<form id="sendemail" action="sendemail.php" method="POST" enctype="multipart/form-data" class="margin">
 	<p><input class="CustText" type="text" id="filename" name="filename" size="60" value="Sense and Respond For Operations Strategy Questionnaire Result Form2" readonly/></p>
 	E-mail: <input type="text" id="email" name="email"/>
-	ResultFile: <input type="file" id="resultfile" name="resultfile"/> 	
-	<input type="button" class="left" size="10" value="Email the Excel" onclick="sendemail('email','resultfile')"/>
+	<input style="border:1px;color:white" type="text" id="formData" name="formData" /> 	
+	<input type="button" class="left" size="10" value="Email the Excel" onclick="sendemail('email','filename')"/>
 	</form>	
 
 </body>
