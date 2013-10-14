@@ -10,9 +10,30 @@
 $to = $_POST["email"];
 $filenametext =$_POST["filename"];
 
+if(!empty($_POST['formData']))
+{
+$data = $_POST['formData'];
+
+//$fname = "test.xls";//generates random name
+$fname = uniqid('result_').".xls";
+
+
+if($file = fopen("./tempDownload/".$fname, "w"))
+	{
+		fwrite($file, $data);
+		fclose($file);
+	}
+else
+	{
+	echo "Sorry, something wrong...please contact the admin";
+	}
+}
+
 $attachmentfile =$_FILES["resultfile"]["tmp_name"];
 $attachmentfiletype=$_FILES["resultfile"]["type"];
 $attachmentfilename=$_FILES["resultfile"]["name"];
+
+
 
 
 //define the subject of the email 
@@ -27,9 +48,14 @@ $headers .= "\r\nContent-Type: multipart/mixed; boundary=\"PHP-mixed-".$random_h
 //read the atachment file contents into a string,
 //encode it with MIME base64,
 //and split it into smaller chunks
+
+/*
 $fp=fopen($attachmentfile,"r");
-$read=fread($fp, filesize($attachmentfile));  
+$read=fread($fp, filesize($attachmentfile)); 
 $attachment = chunk_split(base64_encode($read));
+*/
+
+$attachment = chunk_split(base64_encode(file_get_contents("./tempDownload/".$fname)));
 
 //define the body of the message. 
 ob_start(); //Turn on output buffering 
@@ -51,8 +77,8 @@ Content-Transfer-Encoding: 7bit
 --PHP-alt-<?php echo $random_hash; ?>-- 
 
 --PHP-mixed-<?php echo $random_hash; ?>  
-Content-Type: <?php echo $attachmentfiletype ; ?>; name:<?php echo $attachmentfilename ; ?>
-Content-disposition: attachment; filename=<?php echo $attachmentfilename ; ?> 
+Content-Type: application/vnd.ms-excel; name:<?php echo $fname ; ?> 
+Content-disposition: attachment; filename=<?php echo $fname ; ?> 
 Content-Transfer-Encoding: base64  
 
 <?php echo $attachment; ?> 
@@ -64,8 +90,8 @@ $message = ob_get_clean();
 //send the email 
 $mail_sent = @mail( $to, $subject, $message, $headers ); 
 //if the message is sent successfully print "Mail sent". Otherwise print "Mail failed" 
-echo $mail_sent ? "Mail sent to $to, Filename: $attachmentfilename " : "Mail failed, please send again"; 
-
+echo $mail_sent ? "Mail sent to $to, Filename: $fname " : "Mail failed, please send again"; 
+unlink("./tempDownload/".$fname);
 ?>
 
 
