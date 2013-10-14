@@ -15,6 +15,8 @@
 
 <script>
 //-------------------------------------- _Lu
+
+
 function changeInputlength(text) 
 { 
 		if(text.value)
@@ -29,17 +31,32 @@ function sendemail(emailadressid,file)
 	var filename=document.getElementById(file).value;
 	var form=document.getElementById('sendemail');
 
-	if((!emailadress)||(!filename))
+
+        var filerawdata = document.createElement('a');
+        //getting data from our div that contains the HTML table
+
+        var data_type = 'data:application/vnd.ms-excel';
+        		
+        filerawdata.href = data_type + ', ';     
+
+
+  	    var table_div = document.getElementById('myDynamicResult');//dynamic result		    
+        filerawdata.href = filerawdata.href+table_div.outerHTML; 
+  
+        var table_div = 0;
+        var table_html = 0;
+
+		table_div = document.getElementById('myDynamicTable');//dynamic result 
+        filerawdata.href = filerawdata.href + table_div.outerHTML;
+
+
+	document.getElementById("formData").value=filerawdata.href;
+
+	if(!emailadress)
 	{
-		alert("Somewhere empty...");
+		alert("Sorry, email address empty!");
 		return;
 	}
-	else
-		if(filename.substr(filename.length - _validFileExtensions.length, _validFileExtensions.length).toLowerCase() != _validFileExtensions.toLowerCase())
-		{
-				alert("Sorry, that is not the result file, it should be .xls extension");
-				return;
-		}
 	else
 	{
 		var r=confirm("Are you sure to send the email and LEAVE this page?");
@@ -766,12 +783,12 @@ $(document).ready(function() {
         //getting data from our div that contains the HTML table
         var data_type = 'data:application/vnd.ms-excel';
         
-  	    var table_div = document.getElementById('myDynamicResult');
+  	    var table_div = document.getElementById('myDynamicResult');//dynamic result
 		var table_html = table_div.outerHTML.replace(/ /g, '%20');
 		
-        a.href = data_type + ', ';
-        a.href = a.href + table_html;
-        
+        a.href = data_type + ', ';     
+        a.href = a.href + table_html;  
+  
         
     /* 	    var table_div = document.getElementById('surfacePlotDiv2');
 		var table_html = table_div.outerHTML.replace(/ /g, '%20');	
@@ -780,6 +797,9 @@ $(document).ready(function() {
  //       a.href = data_type + ', ';
         var table_div = 0;
         var table_html = 0;
+/*
+		// _lu comment this part and replace it with the alternative
+
  	    for(var i=1; i<=myArray.length; i++)
 	    {
  		    table_div = document.getElementById('dyna'+ i);
@@ -787,13 +807,21 @@ $(document).ready(function() {
 		   	a.href = a.href + table_html ;
 	            
 	    }  
+*/		
+		table_div = document.getElementById('myDynamicTable');//dynamic result
+		table_html = table_div.outerHTML.replace(/ /g, '%20');
+		a.href = a.href + table_html ; 
+
+
+
 
         //setting the file name
         a.download = 'Senor1_' + postfix + '.xls';
-  
-        
+  	
         //triggering the function
-        a.click();
+        
+        a.click(); 
+
         //just in case, prevent default behaviour
         e.preventDefault();
         return a;
@@ -1510,11 +1538,13 @@ function loadContent()														// Jqury to define the HTML
 	</form>
 
 
+
+
 	<form id="sendemail" action="sendemail.php" method="POST" enctype="multipart/form-data" class="margin">
 	<p><input class="CustText" type="text" id="filename" name="filename" size="60" value="Sense and Respond For Operations Strategy Questionnaire Result Form1" readonly/></p>
 	E-mail: <input type="text" id="email" name="email"/>
-	ResultFile: <input type="file" id="resultfile" name="resultfile"/> 	
-	<input type="button" class="left" size="10" value="Email the Excel" onclick="sendemail('email','resultfile')"/>
+	<input style="border:1px;color:white" type="text" id="formData" name="formData" /> 	
+	<input type="button" class="left" size="10" value="Email the Excel" onclick="sendemail('email','filename')"/>
 	</form>	
 
 </body>
