@@ -25,7 +25,8 @@ Future Improvement
 Try to resolve the problem that users must choose the generated file. The key point is to find a way to pass a generated file or file variable to the php. But until now I havenot solved that. So the alternative choice might be that directly pass the raw data to php and then generated an excel file.
 
 
-Now the users can send the generated file directly to a specific email address without manually choosing the file. For detail, please refer to my blog: 
+Now the users can send the generated file directly to a specific email address without manually choosing the file. For detail, please refer to my blog: http://blog.csdn.net/barry963/article/details/12756427
+
 =====================================
 Newest version:
 http://www.cc.puv.fi/~e1100587/sca-1.1/
