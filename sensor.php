@@ -1062,6 +1062,7 @@ else
 	<input type="button" class="left" size="10" value="Email the Excel" onclick="sendemail('email','filename')"/>
 	</form>	
 
+<center><a href='sensor_admin.php'>Administrator Login</a></center>
 </body>
 </html>
 		

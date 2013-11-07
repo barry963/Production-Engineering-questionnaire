@@ -1,3 +1,7 @@
+<?php
+	require_once('auth.php');
+?>
+
 <html>
 <head>
 <title>Sensor and Response Admin</title>
@@ -168,6 +172,9 @@ function loadContent()														// Jqury to define the HTML
 		  		</ul>
 		</td>
 		</tr>
+		<tr>
+		<td><a href='index.html'><b>Back to user page</b></a></td>
+		</tr>			
 		</table>
 
 		</br>
@@ -331,5 +338,6 @@ echo"</tr>";
 
 
 </body>
+
 </html>
 		
