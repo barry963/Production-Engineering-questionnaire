@@ -49,6 +49,7 @@ the 1.0 new functions compared to 0.9 are listed in the following:
 3. Generated result on the page has the corresponding attribute name
 4. administrator can modify the questionnaire questions in different presets
 5. users can choose different presets  
+6. administrator can login to the corresponding page after submit username and password
 
 =====================================
 
